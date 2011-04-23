@@ -1,0 +1,2 @@
+serviceClass: br.edu.ufcg.geodengue.client.service.GeoDengueService
+path: 7296501E8EA64C3CF7776BC5DD4F032B.gwt.rpc
