@@ -1,11 +1,12 @@
 package br.edu.ufcg.geodengue.client;
 
+import br.edu.ufcg.geodengue.client.service.GeoDengueService;
+import br.edu.ufcg.geodengue.client.service.GeoDengueServiceAsync;
+import br.edu.ufcg.geodengue.shared.SessaoDTO;
+
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.maps.client.MapUIOptions;
-import com.google.gwt.maps.client.MapWidget;
-import com.google.gwt.maps.client.geom.LatLng;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -13,33 +14,49 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class GeoDengue implements EntryPoint {
 
-	private MapWidget mapWidget;
+	private PanelTopo panelTopo;
+	private PanelLogin panelLogin;
+	
+	private GeoDengueServiceAsync server = GWT.create(GeoDengueService.class);
 	
 	public void onModuleLoad() {
+		panelTopo = new PanelTopo(this);
+		panelLogin = new PanelLogin(this);
 		
-		mapWidget = new MapWidget(LatLng.newInstance(-7.231188, -35.886669), 13);
-		mapWidget.setSize("800px", "700px");
-		
-		HorizontalPanel panelMapaEFiltros = new HorizontalPanel();
-		panelMapaEFiltros.setSpacing(10);
-		
-		MapUIOptions options = mapWidget.getDefaultUI();
-		options.setScrollwheel(true);
-		options.setDoubleClick(false);
-		options.setLargeMapControl3d(true);
-		mapWidget.setUI(options);
-		mapWidget.setDoubleClickZoom(false);
-		mapWidget.setDraggable(true);
+		RootPanel.get("login").add(panelTopo);
+	}
 	
-		DecoratorPanel decoratorPanelMapa = new DecoratorPanel();
-		decoratorPanelMapa.add(mapWidget);
-		
-		panelMapaEFiltros.add(decoratorPanelMapa);
-		
-		PanelFiltros panelFiltros = new PanelFiltros(mapWidget);
-		panelMapaEFiltros.add(panelFiltros);
+	public void login(String login, String senha) {
+		final AsyncCallback<SessaoDTO> loginCallBack = new AsyncCallback<SessaoDTO>() {
+
+			@Override
+			public void onFailure(Throwable caught) { }
+
+			@Override
+			public void onSuccess(SessaoDTO result) {
+				if (result == null) {
+					panelLogin.erroLogin();
+				} else {
+					panelTopo.loginComSucesso(result.getAgente().getNome());
+					panelLogin.limpaCampos();
+					RootPanel.get("container").clear();
+					RootPanel.get("container").add(new PanelPrincipalAgente(result));
+				}
+			}
 			
-		RootPanel.get("container").add(panelMapaEFiltros);
+		};
+		
+		server.login(login, senha, loginCallBack);
+	}
+	
+	public void logout() {
+		panelTopo.logoutComSucesso();
+		RootPanel.get("container").clear();
+	}
+
+	public void mostraLoginForm() {
+		RootPanel.get("container").clear();
+		RootPanel.get("container").add(panelLogin);
 	}
 
 }
