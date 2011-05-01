@@ -10,9 +10,13 @@ import java.util.TreeMap;
 
 import org.postgis.PGgeometry;
 
+import br.edu.ufcg.geodengue.shared.AgenteDTO;
+
 public class GeoDengueDAO {
 
 	private final String SELECT_BAIRROS = "SELECT nome, geometria FROM bairros;";
+	private final String LOGIN_AGENTE = "SELECT * FROM agente WHERE login = ? AND senha = ?;";
+	
 	private final String url = "jdbc:postgresql:mydb";
 	private final String driver = "org.postgresql.Driver";
 	private final String usuario = "raquel";
@@ -31,9 +35,8 @@ public class GeoDengueDAO {
 	
 	public Map<String,String> getMapaBairros() {
 		Map<String,String> mapaBairros = new TreeMap<String, String>();
-		String sql = SELECT_BAIRROS; 
 		try {
-            PreparedStatement s = conn.prepareStatement(sql);      
+            PreparedStatement s = conn.prepareStatement(SELECT_BAIRROS);      
             ResultSet rs = s.executeQuery();
             while(rs.next()){
             	String nomeBairro = (String)(rs.getObject("nome"));
@@ -45,6 +48,26 @@ public class GeoDengueDAO {
             e.printStackTrace();
         }
         return mapaBairros;
+	}
+	
+	public AgenteDTO getAgente(String login, String senha) {
+		AgenteDTO agente = null;
+		
+		try {
+            PreparedStatement s = conn.prepareStatement(LOGIN_AGENTE);      
+            s.setString(1, login);
+            s.setString(2, senha);
+            
+            ResultSet rs = s.executeQuery();
+            while(rs.next()){
+            	agente = new AgenteDTO(((String)(rs.getObject("nome"))),10,10,10,10);
+            }
+            s.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+		return agente;
 	}
 	
 }

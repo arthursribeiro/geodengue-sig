@@ -47,7 +47,7 @@ public class PanelFiltros extends Composite {
 		panelFiltroDengue.add(filtroDengue);
 		
 		final ScrollPanel panelFiltroBairros = new ScrollPanel();
-		panelFiltroBairros.setSize("200px", "500px");
+		panelFiltroBairros.setSize("200px", "400px");
 		
 		final AsyncCallback<Map<String,String>> testeCallBack = new AsyncCallback<Map<String,String>>() {
 			@Override
@@ -67,7 +67,7 @@ public class PanelFiltros extends Composite {
 		server.getMapaBairros(testeCallBack);
 		
 		VerticalPanel vPanelFiltros = new VerticalPanel();
-		vPanelFiltros.setSize("200px", "700px");
+		vPanelFiltros.setSize("200px", "600px");
 		vPanelFiltros.add((new Label("Filtros")));
 		vPanelFiltros.add(panelFiltroDengue);
 		vPanelFiltros.add(panelFiltroBairros);
