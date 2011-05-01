@@ -21,6 +21,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -41,13 +42,14 @@ public class PanelFiltros extends Composite {
 		this.mapWidget = mapWidget;
 	
 		ScrollPanel panelFiltroDengue = new ScrollPanel();
-		panelFiltroDengue.setSize("200px", "100px");
+		panelFiltroDengue.setWidth("200px");
 		
 		Tree filtroDengue = criaNoArvoreFiltro("Dengues", Dengue.criaMapaDengue());
+		filtroDengue.setHeight("130px");
 		panelFiltroDengue.add(filtroDengue);
 		
 		final ScrollPanel panelFiltroBairros = new ScrollPanel();
-		panelFiltroBairros.setSize("200px", "400px");
+		panelFiltroBairros.setWidth("200px");
 		
 		final AsyncCallback<Map<String,String>> testeCallBack = new AsyncCallback<Map<String,String>>() {
 			@Override
@@ -57,6 +59,7 @@ public class PanelFiltros extends Composite {
 					mapa.put(s, new Polygon(stringToLatLng(pontos.get(s)), COR, 1, 1, COR, 0.1));
 				}
 				Tree filtroBairros = criaNoArvoreFiltro("Bairros", mapa);
+				filtroBairros.setHeight("340px");
 				panelFiltroBairros.add(filtroBairros);
 			}
 
@@ -66,11 +69,21 @@ public class PanelFiltros extends Composite {
 		
 		server.getMapaBairros(testeCallBack);
 		
+		Label titulo = new Label("Filtros");
+		
 		VerticalPanel vPanelFiltros = new VerticalPanel();
-		vPanelFiltros.setSize("200px", "600px");
-		vPanelFiltros.add((new Label("Filtros")));
+		vPanelFiltros.setSize("200px", "475px");
+		vPanelFiltros.add(titulo);
 		vPanelFiltros.add(panelFiltroDengue);
 		vPanelFiltros.add(panelFiltroBairros);
+
+		vPanelFiltros.setCellVerticalAlignment(titulo, HasVerticalAlignment.ALIGN_TOP);
+		vPanelFiltros.setCellVerticalAlignment(panelFiltroDengue, HasVerticalAlignment.ALIGN_TOP);
+		vPanelFiltros.setCellVerticalAlignment(panelFiltroBairros, HasVerticalAlignment.ALIGN_TOP);
+		
+		vPanelFiltros.setCellHeight(titulo, "10px");
+		vPanelFiltros.setCellHeight(panelFiltroDengue, "130px");
+		vPanelFiltros.setCellHeight(panelFiltroBairros, "340px");
 		
 		panelFiltros = new DecoratorPanel();
 		panelFiltros.add(vPanelFiltros);

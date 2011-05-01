@@ -43,10 +43,17 @@ public class PanelPrincipalAgente extends Composite {
 		DecoratorPanel decoratorPanelMapa = new DecoratorPanel();
 		decoratorPanelMapa.add(mapWidget);
 		
-		panelMapaEFiltros.add(decoratorPanelMapa);
+		VerticalPanel panelCamadasEFiltros = new VerticalPanel();
+		panelCamadasEFiltros.setSpacing(5);
 		
 		PanelFiltros panelFiltros = new PanelFiltros(mapWidget);
-		panelMapaEFiltros.add(panelFiltros);
+		PanelCamadas panelCamadas = new PanelCamadas(mapWidget);
+		panelCamadasEFiltros.add(panelCamadas);
+		panelCamadasEFiltros.add(panelFiltros);
+		
+		panelMapaEFiltros.add(panelCamadasEFiltros);
+		
+		panelMapaEFiltros.add(decoratorPanelMapa);
 		
 		DecoratorPanel decoratorPanelDados = new DecoratorPanel();
 		decoratorPanelDados.add(criaPanelDados());
@@ -63,14 +70,12 @@ public class PanelPrincipalAgente extends Composite {
 	
 	private HorizontalPanel criaPanelAcoes() {
 		HorizontalPanel hPanel = new HorizontalPanel();
-//		hPanel.setWidth("930px");Os
 		hPanel.setSpacing(5);
-		hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 	    
-		hPanel.add(new Button("Botao1"));
-		hPanel.add(new Button("Botao2"));
-		hPanel.add(new Button("Botao3"));
-		hPanel.add(new Button("Botao4"));
+		hPanel.add(new Button("Cadastrar"));
+		hPanel.add(new Button("Focos a uma Distância"));
+		hPanel.add(new Button("Pessoas em um Raio"));
+		hPanel.add(new Button("Distância entre Focos"));
 		
 		return hPanel;
 	}
@@ -79,9 +84,9 @@ public class PanelPrincipalAgente extends Composite {
 		VerticalPanel vPanel = new VerticalPanel();
 		vPanel.setSize("930px" , "80px");
 		
-		vPanel.add(new Label("Area de Cobertura: "+sessao.getAgente().getAreaCobertura()));
+		vPanel.add(new Label("Área de Cobertura: "+sessao.getAgente().getAreaCobertura()));
 		vPanel.add(new Label("Comprimento da Rota: "+sessao.getAgente().getComprimentoRota()));
-		vPanel.add(new Label("Focos Responsavel: "+sessao.getAgente().getFocosResponsavel()));
+		vPanel.add(new Label("Focos Responsável: "+sessao.getAgente().getFocosResponsavel()));
 		vPanel.add(new Label("Focos na Rota: "+sessao.getAgente().getFocosNaRota()));
 		return vPanel;
 	}
