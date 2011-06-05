@@ -1,6 +1,6 @@
 package br.edu.ufcg.geodengue.client;
 
-import br.edu.ufcg.geodengue.client.eventos.CadastrarNovoFocoEvento;
+import br.edu.ufcg.geodengue.client.eventos.CadastrarNovoPontoEvento;
 import br.edu.ufcg.geodengue.client.eventos.EventBus;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,42 +13,41 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class PanelCadastraFoco extends Composite {
+public class PanelCadastraPonto extends Composite {
 
-	private DecoratorPanel panelCamadas;
+	private DecoratorPanel panelCadastra;
 	
-	public PanelCadastraFoco() {
+	public PanelCadastraPonto(String textoAjuda, final boolean ehFoco) {
 		
 		
 		VerticalPanel vPanelFiltros = new VerticalPanel();
 		vPanelFiltros.setSize("930px" , "80px");
 		vPanelFiltros.setSpacing(5);
 		
-		Label textoAjuda = new Label("Texto explicando como cadastrar um novo Foco.");
-		vPanelFiltros.add(textoAjuda);
+		vPanelFiltros.add(new Label(textoAjuda));
 		
-		HorizontalPanel hPanelInfec = new HorizontalPanel();
-		Label lblInfec = new Label("Infectados: ");
-		final TextBox infectados = new TextBox();
-		hPanelInfec.add(lblInfec);
-		hPanelInfec.add(infectados);
+		HorizontalPanel hPanelDesc = new HorizontalPanel();
+		Label lblDesc = new Label("Descrição: ");
+		final TextBox descricao = new TextBox();
+		hPanelDesc.add(lblDesc);
+		hPanelDesc.add(descricao);
 		
 		Button botaoCadastrar = new Button("Cadastrar");
 		botaoCadastrar.addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().publica(new CadastrarNovoFocoEvento(infectados.getValue()));
+				EventBus.getInstance().publica(new CadastrarNovoPontoEvento(descricao.getValue(), ehFoco));
 			}
 		});
 
-		vPanelFiltros.add(hPanelInfec);
+		vPanelFiltros.add(hPanelDesc);
 		vPanelFiltros.add(botaoCadastrar);
 		
-		panelCamadas = new DecoratorPanel();
-		panelCamadas.add(vPanelFiltros);
+		panelCadastra = new DecoratorPanel();
+		panelCadastra.add(vPanelFiltros);
 		
-		initWidget(panelCamadas);
+		initWidget(panelCadastra);
 	}
 	
 }
