@@ -52,6 +52,9 @@ public class GeoDengue implements EntryPoint {
 	public void logout() {
 		panelTopo.logoutComSucesso();
 		RootPanel.get("container").clear();
+		RootPanel.get("dados").clear();
+		RootPanel.get("acoes").clear();
+		RootPanel.get("dinamico").clear();
 	}
 
 	public void mostraLoginForm() {
