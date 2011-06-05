@@ -11,11 +11,13 @@ import java.util.TreeMap;
 import org.postgis.PGgeometry;
 
 import br.edu.ufcg.geodengue.shared.AgenteDTO;
+import br.edu.ufcg.geodengue.shared.PontoDTO;
 
 public class GeoDengueDAO {
 
 	private final String SELECT_BAIRROS = "SELECT nome, geometria FROM bairros;";
 	private final String LOGIN_AGENTE = "SELECT * FROM agente WHERE login = ? AND senha = ?;";
+	private final String INSERT_PONTO = "INSERT INTO ponto (tipo, descricao, geom)  VALUES(?, ?, GeometryFromText(?,4326))";	
 	
 	private final String url = "jdbc:postgresql:mydb";
 	private final String driver = "org.postgresql.Driver";
@@ -68,6 +70,17 @@ public class GeoDengueDAO {
         }
 		
 		return agente;
+	}
+	
+	public void inserePonto(PontoDTO ponto) throws SQLException {
+		String pontoText = String.format("POINT(%f %f)", ponto.getLatitude(), ponto.getLongitude());
+		
+        PreparedStatement s = conn.prepareStatement(INSERT_PONTO);      
+        s.setString(1, ponto.getTipo()+"");
+        s.setString(2, ponto.getDescricao());
+        s.setString(3, pontoText);
+        s.execute();
+        s.close();
 	}
 	
 }

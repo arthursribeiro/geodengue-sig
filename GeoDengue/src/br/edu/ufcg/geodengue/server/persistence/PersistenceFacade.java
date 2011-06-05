@@ -1,8 +1,10 @@
 package br.edu.ufcg.geodengue.server.persistence;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 import br.edu.ufcg.geodengue.shared.AgenteDTO;
+import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
 
 public class PersistenceFacade {
@@ -29,6 +31,16 @@ public class PersistenceFacade {
 	public SessaoDTO login(String login, String senha) {
 		AgenteDTO agente = dao.getAgente(login, senha);		
 		return (SessaoDTO) (agente == null ? agente : new SessaoDTO(agente));
+	}
+	
+	public boolean inserePonto(PontoDTO novoPonto) {
+		try {
+			dao.inserePonto(novoPonto);
+			return true;
+		} catch (SQLException e) {
+//			e.printStackTrace();
+			return false;
+		}
 	}
 	
 }
