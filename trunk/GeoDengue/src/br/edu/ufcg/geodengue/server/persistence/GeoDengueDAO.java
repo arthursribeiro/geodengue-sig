@@ -18,8 +18,8 @@ public class GeoDengueDAO {
 
 	private final String url = "jdbc:postgresql:mydb";
 	private final String driver = "org.postgresql.Driver";
-	private final String usuario = "raquel";
-	private final String senha = "senha";
+	private final String usuario = "postgres";
+	private final String senha = "silv3r";
 	
 	private Connection conn;
 	
@@ -71,7 +71,7 @@ public class GeoDengueDAO {
 	
 	public void inserePonto(PontoDTO ponto) throws SQLException {
 		String pontoText = String.format("POINT(%f %f)", ponto.getLongitude(), ponto.getLatitude());
-		
+		pontoText = pontoText.replace(",", ".");
         PreparedStatement s = conn.prepareStatement(Consultas.INSERT_PONTO);      
         s.setString(1, ponto.getTipo()+"");
         s.setString(2, ponto.getDescricao());
@@ -82,7 +82,7 @@ public class GeoDengueDAO {
 	
 	public long pessoasRaio(RaioDTO raio) {
 		String pontoText = String.format("POINT(%f %f)", raio.getLongitude(), raio.getLatitude());
-		
+		pontoText = pontoText.replace(",", ".");
 		long pessoasContaminadas = -1; // Erro
 		try {
             PreparedStatement s = conn.prepareStatement(Consultas.PESSOAS_RAIO);      
