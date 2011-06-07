@@ -3,6 +3,7 @@ package br.edu.ufcg.geodengue.client;
 import br.edu.ufcg.geodengue.client.eventos.Assinante;
 import br.edu.ufcg.geodengue.client.eventos.AtualizarMapaEvento;
 import br.edu.ufcg.geodengue.client.eventos.EventBus;
+import br.edu.ufcg.geodengue.client.eventos.MarcadorArrastadoEvento;
 import br.edu.ufcg.geodengue.client.eventos.TiposDeEventos;
 import br.edu.ufcg.geodengue.client.utils.Camada;
 import br.edu.ufcg.geodengue.client.utils.Estado;
@@ -12,6 +13,7 @@ import com.google.gwt.maps.client.MapUIOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.event.MapClickHandler;
 import com.google.gwt.maps.client.event.MapMoveEndHandler;
+import com.google.gwt.maps.client.event.MarkerDragEndHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.LatLngBounds;
 import com.google.gwt.maps.client.overlay.GroundOverlay;
@@ -95,8 +97,7 @@ public class PanelMapa extends Composite {
 		}
 		
 		if (panelPrincipal.camadaAtiva(Camada.PESSOAS_RAIO)) {
-			System.out.println("MUDOU DADOS PESSOAS RAIO");
-			mapWidget.addOverlay(poligonoRaio);
+			if (poligonoRaio != null) mapWidget.addOverlay(poligonoRaio);
 		}
 		
 		if (panelPrincipal.camadaAtiva(Camada.FOCOS)) {
@@ -143,6 +144,14 @@ public class PanelMapa extends Composite {
 			MarkerOptions opt = MarkerOptions.newInstance();
 			opt.setDraggable(true);
 			this.marcador = new Marker(latLng, opt);
+			this.marcador.addMarkerDragEndHandler(new MarkerDragEndHandler() {
+				
+				@Override
+				public void onDragEnd(MarkerDragEndEvent event) {
+					EventBus.getInstance().publica(new MarcadorArrastadoEvento());
+					tryRemoveOverlay(poligonoRaio);
+				}
+			});
 			mapWidget.addOverlay(marcador);
 		}
 	}
@@ -178,7 +187,7 @@ public class PanelMapa extends Composite {
 	}
 
 	public void adicionaPoligono(Polygon poligono) {
-		System.err.println("ADICIONA POLIGONO");
+		tryRemoveOverlay(poligonoRaio);
 		this.poligonoRaio = poligono;
 		mapWidget.addOverlay(poligonoRaio);
 	}

@@ -7,13 +7,11 @@ public class GoogleMapsUtil {
 
 	public static LatLng[] drawCircleFromRadius(LatLng center, double radius, int nbOfPoints) {
 
-		System.err.println("PEDIU PRA CALCULAR O CIRCULO");
-		
 		LatLngBounds bounds = LatLngBounds.newInstance();
 		LatLng[] circlePoints = new LatLng[nbOfPoints+1];
 
 		double EARTH_RADIUS = 6371000;
-		double d = radius / EARTH_RADIUS;
+		double d = (radius*100000) / EARTH_RADIUS;
 		double lat1 = Math.toRadians(center.getLatitude());
 		double lng1 = Math.toRadians(center.getLongitude());
 

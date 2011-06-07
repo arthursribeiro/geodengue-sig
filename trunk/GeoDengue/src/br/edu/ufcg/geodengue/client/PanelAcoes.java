@@ -3,6 +3,8 @@ package br.edu.ufcg.geodengue.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.edu.ufcg.geodengue.client.eventos.AtualizarMapaEvento;
+import br.edu.ufcg.geodengue.client.eventos.EventBus;
 import br.edu.ufcg.geodengue.client.utils.Camada;
 import br.edu.ufcg.geodengue.client.utils.Estado;
 
@@ -88,14 +90,17 @@ public class PanelAcoes extends Composite {
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				trataClique(new PanelPessoasRaio("Texto de ajuda do Calcular Pessoas em um Raio"), Estado.CALCULAR_PESSOA_RAIO, pessoasRaio.isDown());
 				if(pessoasRaio.isDown()) PanelPrincipal.getInstance().adicionaCamada(Camada.PESSOAS_RAIO);
-				else PanelPrincipal.getInstance().removeCamada(Camada.PESSOAS_RAIO);
+				else {
+					PanelPrincipal.getInstance().removeCamada(Camada.PESSOAS_RAIO);
+//					EventBus.getInstance().publica(new AtualizarMapaEvento());
+				}
 			}
 		});
 		pessoasRaio.addMouseDownHandler(new MouseDownHandler() {
 			
 			@Override
 			public void onMouseDown(MouseDownEvent event) {
-				if (!cadastrarPessoa.isDown()) untoggleButtons();
+				if (!pessoasRaio.isDown()) untoggleButtons();
 			}
 		});
 		
@@ -106,6 +111,7 @@ public class PanelAcoes extends Composite {
 	public void untoggleButtons() {
 		cadastrarPessoa.setValue(false, true);
 		cadastrarFoco.setValue(false, true);
+		pessoasRaio.setValue(false, true);
 	}
 	
 	private void trataClique(Widget w, Estado estado, boolean valor) {

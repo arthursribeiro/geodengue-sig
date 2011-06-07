@@ -1,5 +1,9 @@
 package br.edu.ufcg.geodengue.client;
 
+import br.edu.ufcg.geodengue.client.eventos.Assinante;
+import br.edu.ufcg.geodengue.client.eventos.EventBus;
+import br.edu.ufcg.geodengue.client.eventos.MarcadorArrastadoEvento;
+import br.edu.ufcg.geodengue.client.eventos.TiposDeEventos;
 import br.edu.ufcg.geodengue.client.service.GeoDengueService;
 import br.edu.ufcg.geodengue.client.service.GeoDengueServiceAsync;
 import br.edu.ufcg.geodengue.client.utils.GoogleMapsUtil;
@@ -24,6 +28,8 @@ public class PanelPessoasRaio extends Composite {
 
 	private GeoDengueServiceAsync server = GWT.create(GeoDengueService.class);
 	private DecoratorPanel panelPessoasRaio;
+	private TextBox raio;
+	private TextBox pessoasRaio;
 	
 	public PanelPessoasRaio(String textoAjuda) {
 		
@@ -35,7 +41,7 @@ public class PanelPessoasRaio extends Composite {
 		
 		HorizontalPanel hPanelDesc = new HorizontalPanel();
 		Label lblDesc = new Label("Raio desejado: ");
-		final TextBox raio = new TextBox();
+		raio = new TextBox();
 		hPanelDesc.add(lblDesc);
 		hPanelDesc.add(raio);
 		
@@ -46,33 +52,48 @@ public class PanelPessoasRaio extends Composite {
 			public void onClick(ClickEvent event) {
 				String value = raio.getValue();
 				if (value != null && !value.isEmpty()) {
-					try {
-						Integer.parseInt(value);
-					} catch (Exception e) {
-						Window.alert("Deve se colocar um valor inteiro para o raio!");
-					}			
-					calculaPessoasRaio(Integer.parseInt(value));
+					calculaPessoasRaio();
 				} else {
 					Window.alert("Digite um valor para o raio!");
 				}
 			}
 		});
+		
+		HorizontalPanel hPanelDesc2 = new HorizontalPanel();
+		Label lblDesc2 = new Label("Pessoas no Raio: ");
+		pessoasRaio = new TextBox();
+		pessoasRaio.setValue("0");
+		pessoasRaio.setEnabled(false);
+		hPanelDesc2.add(lblDesc2);
+		hPanelDesc2.add(pessoasRaio);
 
 		vPanelFiltros.add(hPanelDesc);
+		vPanelFiltros.add(hPanelDesc2);
 		vPanelFiltros.add(botaoCalcular);
 		
 		panelPessoasRaio = new DecoratorPanel();
 		panelPessoasRaio.add(vPanelFiltros);
 		
 		initWidget(panelPessoasRaio);
+		
+		EventBus.getInstance().registraAssinante(TiposDeEventos.MODIFICOU_LOCAL_MARCADOR, new TrataNovoCalculoPoligono());
 	}
 	
-	private void calculaPessoasRaio(final int raio) {
+	private void calculaPessoasRaio() {
 		final Marker marcador = PanelPrincipal.getInstance().getMarcador();
 		if (marcador == null) {
 			Window.alert("Necessário marcar o ponto no mapa!");
 			return;
 		}
+
+		try {
+			Double.parseDouble(raio.getValue());
+		} catch (Exception e) {
+			Window.alert("Deve se colocar um valor numerico para o raio!");
+			return;
+		}			
+		
+		final double raioValor = Double.parseDouble(raio.getValue());
 		
 		final AsyncCallback<Long> calculaCallBack = new AsyncCallback<Long>() {
 
@@ -83,16 +104,21 @@ public class PanelPessoasRaio extends Composite {
 
 			@Override
 			public void onSuccess(Long result) {
-				Polygon poligono = new Polygon(GoogleMapsUtil.drawCircleFromRadius(marcador.getLatLng(), raio, 10), "yellow", 1, 1, "yellow", 0.1);
+				Polygon poligono = new Polygon(GoogleMapsUtil.drawCircleFromRadius(marcador.getLatLng(), raioValor, 15), "blue", 1, 1, "blue", 0.2);
 				PanelPrincipal.getInstance().adicionaPoligonoNoMapa(poligono);
-				Window.alert("Pessoas no raio: "+ result);
+				pessoasRaio.setValue(result.toString());
 			}
 			
 		};
 		
-		
-		server.pessoasRaio(new RaioDTO(marcador.getLatLng().getLatitude(), marcador.getLatLng().getLongitude(), raio), calculaCallBack);
+		server.pessoasRaio(new RaioDTO(marcador.getLatLng().getLatitude(), marcador.getLatLng().getLongitude(), raioValor), calculaCallBack);
+	}
 	
+	private class TrataNovoCalculoPoligono implements Assinante<MarcadorArrastadoEvento> {
+		@Override
+		public void trataEvento(MarcadorArrastadoEvento evento) {
+			calculaPessoasRaio();
+		}
 	}
 	
 }
