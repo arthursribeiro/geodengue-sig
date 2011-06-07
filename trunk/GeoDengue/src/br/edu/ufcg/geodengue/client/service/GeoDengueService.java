@@ -1,6 +1,7 @@
 package br.edu.ufcg.geodengue.client.service;
 
 import br.edu.ufcg.geodengue.shared.PontoDTO;
+import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -13,4 +14,5 @@ public interface GeoDengueService extends RemoteService {
 	
 	public boolean cadastraNovoPonto(PontoDTO novoPonto);
 	
+	public long pessoasRaio(RaioDTO raio);
 }

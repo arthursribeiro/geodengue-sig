@@ -12,13 +12,10 @@ import org.postgis.PGgeometry;
 
 import br.edu.ufcg.geodengue.shared.AgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
+import br.edu.ufcg.geodengue.shared.RaioDTO;
 
 public class GeoDengueDAO {
 
-	private final String SELECT_BAIRROS = "SELECT nome, geometria FROM bairros;";
-	private final String LOGIN_AGENTE = "SELECT * FROM agente WHERE login = ? AND senha = ?;";
-	private final String INSERT_PONTO = "INSERT INTO ponto (tipo, descricao, geom)  VALUES(?, ?, GeometryFromText(?,4326))";	
-	
 	private final String url = "jdbc:postgresql:mydb";
 	private final String driver = "org.postgresql.Driver";
 	private final String usuario = "raquel";
@@ -38,7 +35,7 @@ public class GeoDengueDAO {
 	public Map<String,String> getMapaBairros() {
 		Map<String,String> mapaBairros = new TreeMap<String, String>();
 		try {
-            PreparedStatement s = conn.prepareStatement(SELECT_BAIRROS);      
+            PreparedStatement s = conn.prepareStatement(Consultas.SELECT_BAIRROS);      
             ResultSet rs = s.executeQuery();
             while(rs.next()){
             	String nomeBairro = (String)(rs.getObject("nome"));
@@ -56,7 +53,7 @@ public class GeoDengueDAO {
 		AgenteDTO agente = null;
 		
 		try {
-            PreparedStatement s = conn.prepareStatement(LOGIN_AGENTE);      
+            PreparedStatement s = conn.prepareStatement(Consultas.LOGIN_AGENTE);      
             s.setString(1, login);
             s.setString(2, senha);
             
@@ -73,14 +70,42 @@ public class GeoDengueDAO {
 	}
 	
 	public void inserePonto(PontoDTO ponto) throws SQLException {
-		String pontoText = String.format("POINT(%f %f)", ponto.getLatitude(), ponto.getLongitude());
+		String pontoText = String.format("POINT(%f %f)", ponto.getLongitude(), ponto.getLatitude());
 		
-        PreparedStatement s = conn.prepareStatement(INSERT_PONTO);      
+		System.out.println(pontoText);
+		System.out.println(ponto.getTipo());
+		
+        PreparedStatement s = conn.prepareStatement(Consultas.INSERT_PONTO);      
         s.setString(1, ponto.getTipo()+"");
         s.setString(2, ponto.getDescricao());
         s.setString(3, pontoText);
         s.execute();
         s.close();
+	}
+	
+	public long pessoasRaio(RaioDTO raio) {
+		String pontoText = String.format("POINT(%f %f)", raio.getLongitude(), raio.getLatitude());
+		
+		System.out.println(Consultas.PESSOAS_RAIO);
+		System.out.println(pontoText);
+		System.out.println(raio.getRaio());
+		
+		long pessoasContaminadas = -1; // Erro
+		try {
+            PreparedStatement s = conn.prepareStatement(Consultas.PESSOAS_RAIO);      
+            s.setString(1, pontoText);
+            s.setInt(2, raio.getRaio());
+            
+            ResultSet rs = s.executeQuery();
+            while(rs.next()){
+            	pessoasContaminadas = (Long) (rs.getObject("valor"));
+            }
+            s.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+		return pessoasContaminadas;
 	}
 	
 }

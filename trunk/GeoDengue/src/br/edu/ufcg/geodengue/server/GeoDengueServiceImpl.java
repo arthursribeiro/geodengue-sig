@@ -3,6 +3,7 @@ package br.edu.ufcg.geodengue.server;
 import br.edu.ufcg.geodengue.client.service.GeoDengueService;
 import br.edu.ufcg.geodengue.server.persistence.PersistenceFacade;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
+import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -19,6 +20,11 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	@Override
 	public boolean cadastraNovoPonto(PontoDTO novoPonto) {
 		return PersistenceFacade.getInstance().inserePonto(novoPonto);
+	}
+
+	@Override
+	public long pessoasRaio(RaioDTO raio) {
+		return PersistenceFacade.getInstance().pessoasRaio(raio);
 	}
 
 }
