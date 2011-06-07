@@ -5,7 +5,6 @@ import java.util.List;
 
 import br.edu.ufcg.geodengue.client.eventos.AtualizarMapaEvento;
 import br.edu.ufcg.geodengue.client.eventos.EventBus;
-import br.edu.ufcg.geodengue.client.eventos.TiposDeEventos;
 import br.edu.ufcg.geodengue.client.utils.Camada;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -54,7 +53,7 @@ public class PanelCamadas extends Composite {
 				} else {
 					camadas.remove(Camada.AREA_AGENTES);
 				}
-				EventBus.getInstance().publica(new AtualizarMapaEvento(TiposDeEventos.ATUALIZAR_MAPA));
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
 			}
 		});
 		
@@ -69,7 +68,7 @@ public class PanelCamadas extends Composite {
 				} else {
 					camadas.remove(Camada.FOCOS);
 				}
-				EventBus.getInstance().publica(new AtualizarMapaEvento(TiposDeEventos.ATUALIZAR_MAPA));
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
 			}
 		});
 		
@@ -83,7 +82,7 @@ public class PanelCamadas extends Composite {
 				} else {
 					camadas.remove(Camada.PESSOAS_CONTAMINADAS);
 				}
-				EventBus.getInstance().publica(new AtualizarMapaEvento(TiposDeEventos.ATUALIZAR_MAPA));
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
 			}
 		});
 	}

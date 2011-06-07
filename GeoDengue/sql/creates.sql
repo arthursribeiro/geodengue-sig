@@ -10,3 +10,10 @@ CREATE TABLE agente (
 	senha varchar(10),
 	nome varchar(30)
 );
+
+CREATE TABLE Ponto (
+	id serial PRIMARY KEY,
+	descricao varchar(100),
+	tipo char
+);
+SELECT AddGeometryColumn('ponto','geom',4326,'POINT',2);

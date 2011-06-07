@@ -72,9 +72,6 @@ public class GeoDengueDAO {
 	public void inserePonto(PontoDTO ponto) throws SQLException {
 		String pontoText = String.format("POINT(%f %f)", ponto.getLongitude(), ponto.getLatitude());
 		
-		System.out.println(pontoText);
-		System.out.println(ponto.getTipo());
-		
         PreparedStatement s = conn.prepareStatement(Consultas.INSERT_PONTO);      
         s.setString(1, ponto.getTipo()+"");
         s.setString(2, ponto.getDescricao());
@@ -86,15 +83,11 @@ public class GeoDengueDAO {
 	public long pessoasRaio(RaioDTO raio) {
 		String pontoText = String.format("POINT(%f %f)", raio.getLongitude(), raio.getLatitude());
 		
-		System.out.println(Consultas.PESSOAS_RAIO);
-		System.out.println(pontoText);
-		System.out.println(raio.getRaio());
-		
 		long pessoasContaminadas = -1; // Erro
 		try {
             PreparedStatement s = conn.prepareStatement(Consultas.PESSOAS_RAIO);      
             s.setString(1, pontoText);
-            s.setInt(2, raio.getRaio());
+            s.setDouble(2, raio.getRaio());
             
             ResultSet rs = s.executeQuery();
             while(rs.next()){
