@@ -33,14 +33,14 @@ public class GeoDengue implements EntryPoint {
 			public void onFailure(Throwable caught) { }
 
 			@Override
-			public void onSuccess(SessaoDTO result) {
-				if (result == null) {
+			public void onSuccess(SessaoDTO sessao) {
+				if (sessao == null) {
 					panelLogin.erroLogin();
 				} else {
-					panelTopo.loginComSucesso(result.getAgente().getNome());
+					panelTopo.loginComSucesso(sessao.getAgente().getNome());
 					panelLogin.limpaCampos();
 					RootPanel.get("container").clear();
-					RootPanel.get("container").add(new PanelPrincipalAgente(result));
+					PanelPrincipal.inicia(sessao);
 				}
 			}
 			

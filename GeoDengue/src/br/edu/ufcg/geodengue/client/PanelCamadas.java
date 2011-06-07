@@ -1,8 +1,12 @@
 package br.edu.ufcg.geodengue.client;
 
-import br.edu.ufcg.geodengue.client.eventos.BooleanEvento;
+import java.util.ArrayList;
+import java.util.List;
+
+import br.edu.ufcg.geodengue.client.eventos.AtualizarMapaEvento;
 import br.edu.ufcg.geodengue.client.eventos.EventBus;
 import br.edu.ufcg.geodengue.client.eventos.TiposDeEventos;
+import br.edu.ufcg.geodengue.client.utils.Camada;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -18,9 +22,12 @@ public class PanelCamadas extends Composite {
 	private CheckBox areasAgentes;
 	private CheckBox focos;
 	private CheckBox pessoasContaminadas;
+
+	private List<Camada> camadas;
 	
 	public PanelCamadas() {
-	
+		this.camadas = new ArrayList<Camada>();
+		
 		criaCheckBoxes();
 		
 		VerticalPanel vPanelFiltros = new VerticalPanel();
@@ -42,7 +49,12 @@ public class PanelCamadas extends Composite {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().publica(new BooleanEvento(TiposDeEventos.CHECKBOX_AREA_AGENTE, areasAgentes.getValue()));
+				if (areasAgentes.getValue()) {
+					camadas.add(Camada.AREA_AGENTES);
+				} else {
+					camadas.remove(Camada.AREA_AGENTES);
+				}
+				EventBus.getInstance().publica(new AtualizarMapaEvento(TiposDeEventos.ATUALIZAR_MAPA));
 			}
 		});
 		
@@ -52,7 +64,12 @@ public class PanelCamadas extends Composite {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().publica(new BooleanEvento(TiposDeEventos.CHECKBOX_FOCOS, focos.getValue()));
+				if (focos.getValue()) {
+					camadas.add(Camada.FOCOS);
+				} else {
+					camadas.remove(Camada.FOCOS);
+				}
+				EventBus.getInstance().publica(new AtualizarMapaEvento(TiposDeEventos.ATUALIZAR_MAPA));
 			}
 		});
 		
@@ -61,8 +78,26 @@ public class PanelCamadas extends Composite {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().publica(new BooleanEvento(TiposDeEventos.CHECKBOX_PESSOAS_CONTAMINADAS, pessoasContaminadas.getValue()));
+				if (pessoasContaminadas.getValue()) {
+					camadas.add(Camada.PESSOAS_CONTAMINADAS);
+				} else {
+					camadas.remove(Camada.PESSOAS_CONTAMINADAS);
+				}
+				EventBus.getInstance().publica(new AtualizarMapaEvento(TiposDeEventos.ATUALIZAR_MAPA));
 			}
 		});
 	}
+	
+	public boolean isCamadaAtiva(Camada camada) {
+		return this.camadas.contains(camada);
+	}
+	
+	public void adicionaCamada(Camada camada) {
+		this.camadas.add(camada);
+	}
+	
+	public void removeCamada(Camada camada) {
+		this.camadas.remove(camada);
+	}
+	
 }

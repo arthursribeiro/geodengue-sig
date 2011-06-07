@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.edu.ufcg.geodengue.shared.AgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
+import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
 
 public class PersistenceFacade {
@@ -31,6 +32,10 @@ public class PersistenceFacade {
 	public SessaoDTO login(String login, String senha) {
 		AgenteDTO agente = dao.getAgente(login, senha);		
 		return (SessaoDTO) (agente == null ? agente : new SessaoDTO(agente));
+	}
+	
+	public long pessoasRaio(RaioDTO raio) {
+		return dao.pessoasRaio(raio);
 	}
 	
 	public boolean inserePonto(PontoDTO novoPonto) {

@@ -1,8 +1,10 @@
 package br.edu.ufcg.geodengue.client;
 
-import br.edu.ufcg.geodengue.client.eventos.BooleanEvento;
-import br.edu.ufcg.geodengue.client.eventos.EventBus;
-import br.edu.ufcg.geodengue.client.eventos.TiposDeEventos;
+import java.util.ArrayList;
+import java.util.List;
+
+import br.edu.ufcg.geodengue.client.utils.Camada;
+import br.edu.ufcg.geodengue.client.utils.Estado;
 
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -12,17 +14,23 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.Widget;
 
 public class PanelAcoes extends Composite {
 
 	private DecoratorPanel panelAcoes;
 	private ToggleButton cadastrarFoco;
 	private ToggleButton cadastrarPessoa;
-	private Button pessoasRaio;
+	private ToggleButton pessoasRaio;
 	private Button distanciaFocos;
 	
+	private List<Estado> estados;
+	
 	public PanelAcoes() {
+		this.estados = new ArrayList<Estado>();
+		
 		criaBotoes();
 		
 		HorizontalPanel hPanel = new HorizontalPanel();
@@ -46,7 +54,7 @@ public class PanelAcoes extends Composite {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				EventBus.getInstance().publica(new BooleanEvento(TiposDeEventos.CADASTRAR_FOCO_CLICADO, cadastrarFoco.isDown()));
+				trataClique(new PanelCadastraPonto("Texto de ajuda do Cadastrar Foco", true), Estado.CADASTRAR_FOCO, cadastrarFoco.isDown());
 			}
 		});
 		cadastrarFoco.addMouseDownHandler(new MouseDownHandler() {
@@ -62,7 +70,7 @@ public class PanelAcoes extends Composite {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				EventBus.getInstance().publica(new BooleanEvento(TiposDeEventos.CADASTRAR_PESSOA_CLICADO, cadastrarPessoa.isDown()));
+				trataClique(new PanelCadastraPonto("Texto de ajuda do Cadastrar Pessoa", false), Estado.CADASTRAR_PESSOA, cadastrarPessoa.isDown());
 			}
 		});
 		cadastrarPessoa.addMouseDownHandler(new MouseDownHandler() {
@@ -73,8 +81,23 @@ public class PanelAcoes extends Composite {
 			}
 		});
 		
-		pessoasRaio = new Button("Pessoas em um Raio");
-		pessoasRaio.setEnabled(false);
+		pessoasRaio = new ToggleButton("Pessoas em um Raio");
+		pessoasRaio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				trataClique(new PanelPessoasRaio("Texto de ajuda do Calcular Pessoas em um Raio"), Estado.CALCULAR_PESSOA_RAIO, pessoasRaio.isDown());
+				if(pessoasRaio.isDown()) PanelPrincipal.getInstance().adicionaCamada(Camada.PESSOAS_RAIO);
+				else PanelPrincipal.getInstance().removeCamada(Camada.PESSOAS_RAIO);
+			}
+		});
+		pessoasRaio.addMouseDownHandler(new MouseDownHandler() {
+			
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				if (!cadastrarPessoa.isDown()) untoggleButtons();
+			}
+		});
 		
 		distanciaFocos = new Button("Distância entre Focos");
 		distanciaFocos.setEnabled(false);
@@ -83,6 +106,24 @@ public class PanelAcoes extends Composite {
 	public void untoggleButtons() {
 		cadastrarPessoa.setValue(false, true);
 		cadastrarFoco.setValue(false, true);
+	}
+	
+	private void trataClique(Widget w, Estado estado, boolean valor) {
+		limpaDinamico();
+		if(valor) {
+			RootPanel.get("dinamico").add(w);
+			estados.add(estado);
+		}
+		PanelPrincipal.getInstance().retiraMarcador();
+	}
+	
+	public void limpaDinamico() {
+		RootPanel.get("dinamico").clear();
+		estados.clear();
+	}
+	
+	public boolean isBotaoAtivo(Estado estado) {
+		return this.estados.contains(estado);
 	}
 	
 }
