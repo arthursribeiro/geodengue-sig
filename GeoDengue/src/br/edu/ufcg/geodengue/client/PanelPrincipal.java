@@ -2,7 +2,6 @@ package br.edu.ufcg.geodengue.client;
 
 import br.edu.ufcg.geodengue.client.utils.Camada;
 import br.edu.ufcg.geodengue.client.utils.Estado;
-import br.edu.ufcg.geodengue.shared.SessaoDTO;
 
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Polygon;
@@ -14,19 +13,16 @@ public class PanelPrincipal extends Composite {
 
 	private static PanelPrincipal singletonInstance;
 	
-	private SessaoDTO sessao;
-	
 	private PanelAcoes panelAcoes;
 	private PanelCamadas panelCamadas;
-	private PanelDados panelDados;
+//	private PanelDados panelDados;
 	private PanelMapa panelMapa;
 	
-	private PanelPrincipal(SessaoDTO sessao) {
-		this.sessao = sessao;
+	private PanelPrincipal() {
 	}
 	
 	private void criaComponentes() {
-		panelDados = new PanelDados(sessao.getAgente());
+//		panelDados = new PanelDados(sessao.getAgente());
 		panelAcoes = new PanelAcoes();
 		
 		HorizontalPanel panelMapaECamadas = new HorizontalPanel();
@@ -35,17 +31,17 @@ public class PanelPrincipal extends Composite {
 		panelCamadas = new PanelCamadas();
 		panelMapaECamadas.add(panelCamadas);
 
-		panelMapa = new PanelMapa(sessao);
+		panelMapa = new PanelMapa();
 		panelMapaECamadas.add(panelMapa);
 
-		RootPanel.get("dados").add(panelDados);
+//		RootPanel.get("dados").add(panelDados);
 		RootPanel.get("acoes").add(panelAcoes);
 		RootPanel.get("container").add(panelMapaECamadas);
 	}
 
-	public static void inicia(SessaoDTO sessao) {
+	public static void inicia() {
 		if (singletonInstance == null) {
-			singletonInstance = new PanelPrincipal(sessao);
+			singletonInstance = new PanelPrincipal();
 			singletonInstance.criaComponentes();
 		} else {
 			throw new IllegalStateException("Ja existe um PanelPrincipal!");
@@ -93,6 +89,10 @@ public class PanelPrincipal extends Composite {
 	
 	public void removeCamada(Camada camada) {
 		panelCamadas.removeCamada(camada);
+	}
+	
+	public void removePoligonoPessoasRaio() {
+		panelMapa.removePoligonoPessoasRaio();
 	}
 	
 }

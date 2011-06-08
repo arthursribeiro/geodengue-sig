@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -13,13 +15,14 @@ import org.postgis.PGgeometry;
 import br.edu.ufcg.geodengue.shared.AgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
+import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 public class GeoDengueDAO {
 
 	private final String url = "jdbc:postgresql:mydb";
 	private final String driver = "org.postgresql.Driver";
-	private final String usuario = "postgres";
-	private final String senha = "silv3r";
+	private final String usuario = "raquel";
+	private final String senha = "senha";
 	
 	private Connection conn;
 	
@@ -99,6 +102,39 @@ public class GeoDengueDAO {
         }
 		
 		return pessoasContaminadas;
+	}
+	
+	public TooltipDTO recuperaDadosTooltip(double latitude, double longitude) {
+		String pontoText = String.format("POINT(%f %f)", longitude, latitude);
+		pontoText = pontoText.replace(",", ".");
+
+		TooltipDTO tool = new TooltipDTO(latitude, longitude);
+		
+		tool.getFocos().addAll(recuperaDados(pontoText, Consultas.DADOS_FOCO));
+		tool.getPessoas().addAll(recuperaDados(pontoText, Consultas.DADOS_PESSOA));
+		tool.getBairros().addAll(recuperaDados(pontoText, Consultas.DADOS_BAIRRO));
+		
+		return tool;
+	}
+	
+	private List<String> recuperaDados(String pontoText, String consulta) {
+		List<String> dados = new ArrayList<String>();
+		try {
+            PreparedStatement s = conn.prepareStatement(consulta);      
+            s.setString(1, pontoText);
+
+            String descricao;
+            
+            ResultSet rs = s.executeQuery();
+        	while(rs.next()){
+            	descricao = (rs.getString("desc"));
+            	if (!descricao.isEmpty()) dados.add(descricao);
+            }
+            s.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return dados;
 	}
 	
 }
