@@ -49,8 +49,30 @@ public class PersistenceFacade {
 		}
 	}
 	
+	public boolean insereAgente(String nome, String bairro) {
+		try {
+			dao.insereAgente(nome, bairro);
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public TooltipDTO recuperaDadosTooltip(double latitude, double longitude) {
 		return dao.recuperaDadosTooltip(latitude, longitude);
+	}
+	
+	public PontoDTO recuperaFocos(double latitude, double longitude) {
+		return dao.recuperaPonto(latitude, longitude);
+	}
+	
+	public Map<String, String> recuperaBairrosSemResponsaveis() {
+		return dao.recuperaBairrosSemResponsaveis();
+	}
+	
+	public double calculaDistanciaEntreFocos(PontoDTO p1, PontoDTO p2) {
+		return dao.calculaDistanciaEntreFocos(p1, p2);
 	}
 	
 }

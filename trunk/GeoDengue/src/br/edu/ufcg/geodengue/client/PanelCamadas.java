@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class PanelCamadas extends Composite {
 
 	private DecoratorPanel panelCamadas;
+	private CheckBox agentes;
 	private CheckBox areasAgentes;
 	private CheckBox focos;
 	private CheckBox pessoasContaminadas;
@@ -32,6 +33,7 @@ public class PanelCamadas extends Composite {
 		VerticalPanel vPanelFiltros = new VerticalPanel();
 		vPanelFiltros.setSize("200px", "100px");
 		vPanelFiltros.add((new Label("Camadas")));
+		vPanelFiltros.add(agentes);
 		vPanelFiltros.add(areasAgentes);
 		vPanelFiltros.add(focos);
 		vPanelFiltros.add(pessoasContaminadas);
@@ -43,7 +45,22 @@ public class PanelCamadas extends Composite {
 	}
 
 	private void criaCheckBoxes() {
-		areasAgentes = new CheckBox("Áreas de Agentes");
+		
+		agentes = new CheckBox("Agentes");
+		agentes.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if (agentes.getValue()) {
+					camadas.add(Camada.AGENTES);
+				} else {
+					camadas.remove(Camada.AGENTES);
+				}
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
+			}
+		});
+		
+		areasAgentes = new CheckBox("Bairros");
 		areasAgentes.addClickHandler(new ClickHandler() {
 			
 			@Override

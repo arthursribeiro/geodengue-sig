@@ -1,5 +1,7 @@
 package br.edu.ufcg.geodengue.server;
 
+import java.util.Map;
+
 import br.edu.ufcg.geodengue.client.service.GeoDengueService;
 import br.edu.ufcg.geodengue.server.persistence.PersistenceFacade;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
@@ -22,6 +24,11 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	public boolean cadastraNovoPonto(PontoDTO novoPonto) {
 		return PersistenceFacade.getInstance().inserePonto(novoPonto);
 	}
+	
+	@Override
+	public boolean cadastraNovoAgente(String nome, String bairro) {
+		return PersistenceFacade.getInstance().insereAgente(nome, bairro);
+	}
 
 	@Override
 	public long pessoasRaio(RaioDTO raio) {
@@ -31,6 +38,21 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	@Override
 	public TooltipDTO recuperaDadosTooltip(double latitude, double longitude) {
 		return PersistenceFacade.getInstance().recuperaDadosTooltip(latitude, longitude);
+	}
+	
+	@Override
+	public PontoDTO recuperaFoco(double latitude, double longitude) {
+		return PersistenceFacade.getInstance().recuperaFocos(latitude, longitude);
+	}
+	
+	@Override
+	public Map<String, String> recuperaBairrosSemResponsaveis() {
+		return PersistenceFacade.getInstance().recuperaBairrosSemResponsaveis();
+	}
+	
+	@Override	
+	public double calculaDistanciaEntreFocos(PontoDTO p1, PontoDTO p2) {
+		return PersistenceFacade.getInstance().calculaDistanciaEntreFocos(p1, p2);
 	}
 
 }

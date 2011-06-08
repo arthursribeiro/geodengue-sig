@@ -83,6 +83,14 @@ public class GeoDengueDAO {
         s.close();
 	}
 	
+	public void insereAgente(String nome, String bairroResp) throws SQLException {
+        PreparedStatement s = conn.prepareStatement(Consultas.INSERT_AGENTE);      
+        s.setString(1, nome);
+        s.setInt(2, Integer.parseInt(bairroResp));
+        s.execute();
+        s.close();
+	}
+	
 	public long pessoasRaio(RaioDTO raio) {
 		String pontoText = String.format("POINT(%f %f)", raio.getLongitude(), raio.getLatitude());
 		pontoText = pontoText.replace(",", ".");
@@ -117,6 +125,27 @@ public class GeoDengueDAO {
 		return tool;
 	}
 	
+	public Map<String, String> recuperaBairrosSemResponsaveis() {
+		Map<String, String> bairros = new TreeMap<String, String>();
+		
+		try {
+            PreparedStatement s = conn.prepareStatement(Consultas.BAIRROS_SEM_RESP);      
+            
+            ResultSet rs = s.executeQuery();
+            String id, nome;
+        	while(rs.next()){
+        		id = rs.getString("id");
+        		nome = rs.getString("nome");
+        		bairros.put(nome, id);
+            }
+            s.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+		return bairros;
+	}
+	
 	private List<String> recuperaDados(String pontoText, String consulta) {
 		List<String> dados = new ArrayList<String>();
 		try {
@@ -137,4 +166,53 @@ public class GeoDengueDAO {
 		return dados;
 	}
 	
+	public PontoDTO recuperaPonto(double latitude, double longitude) {
+		String pontoText = String.format("POINT(%f %f)", longitude, latitude);
+		pontoText = pontoText.replace(",", ".");
+		
+		String descricao = null;
+		int id = 0;
+
+		try {
+            PreparedStatement s = conn.prepareStatement(Consultas.DADOS_FOCO);      
+            s.setString(1, pontoText);
+            
+            ResultSet rs = s.executeQuery();
+        	while(rs.next()){
+            	descricao = (rs.getString("desc"));
+            	id = (rs.getInt("id"));
+            }
+            s.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+        if (descricao == null) return null;
+        
+        PontoDTO ponto = new PontoDTO(descricao, latitude, longitude, 'F');
+        ponto.setId(id);
+        
+		return ponto;
+	}
+
+	public double calculaDistanciaEntreFocos(PontoDTO p1, PontoDTO p2) {
+		double distancia = 0;
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(Consultas.DISTANCIA_PONTOS);      
+			s.setInt(1, p1.getId());
+			s.setInt(2, p2.getId());
+			ResultSet rs = s.executeQuery();
+			while(rs.next()){
+				distancia = rs.getDouble(1);
+			}
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}       
+		return distancia;
+
+	}
+	
 }
+

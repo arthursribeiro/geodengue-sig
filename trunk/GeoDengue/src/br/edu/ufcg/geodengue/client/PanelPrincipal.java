@@ -95,4 +95,8 @@ public class PanelPrincipal extends Composite {
 		panelMapa.removePoligonoPessoasRaio();
 	}
 	
+	public PanelDistanciaFocos getPanelDistancia() {
+		return panelAcoes.getPanelDistancia();
+	}
+	
 }

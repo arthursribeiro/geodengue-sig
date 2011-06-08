@@ -8,7 +8,8 @@ CREATE TABLE agente (
 	id SERIAL PRIMARY KEY,
 	login varchar(10),
 	senha varchar(10),
-	nome varchar(30)
+	nome varchar(30),
+	bairroresp integer references bairroscampina(gid)
 );
 
 CREATE TABLE Ponto (
