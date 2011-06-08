@@ -5,6 +5,7 @@ import br.edu.ufcg.geodengue.server.persistence.PersistenceFacade;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
+import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -25,6 +26,11 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	@Override
 	public long pessoasRaio(RaioDTO raio) {
 		return PersistenceFacade.getInstance().pessoasRaio(raio);
+	}
+	
+	@Override
+	public TooltipDTO recuperaDadosTooltip(double latitude, double longitude) {
+		return PersistenceFacade.getInstance().recuperaDadosTooltip(latitude, longitude);
 	}
 
 }

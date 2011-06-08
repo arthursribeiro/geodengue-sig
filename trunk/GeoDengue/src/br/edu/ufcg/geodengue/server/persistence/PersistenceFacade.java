@@ -7,6 +7,7 @@ import br.edu.ufcg.geodengue.shared.AgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
+import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 public class PersistenceFacade {
 	
@@ -46,6 +47,10 @@ public class PersistenceFacade {
 //			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public TooltipDTO recuperaDadosTooltip(double latitude, double longitude) {
+		return dao.recuperaDadosTooltip(latitude, longitude);
 	}
 	
 }

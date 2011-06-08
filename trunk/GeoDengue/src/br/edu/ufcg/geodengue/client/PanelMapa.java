@@ -5,10 +5,15 @@ import br.edu.ufcg.geodengue.client.eventos.AtualizarMapaEvento;
 import br.edu.ufcg.geodengue.client.eventos.EventBus;
 import br.edu.ufcg.geodengue.client.eventos.MarcadorArrastadoEvento;
 import br.edu.ufcg.geodengue.client.eventos.TiposDeEventos;
+import br.edu.ufcg.geodengue.client.service.GeoDengueService;
+import br.edu.ufcg.geodengue.client.service.GeoDengueServiceAsync;
 import br.edu.ufcg.geodengue.client.utils.Camada;
 import br.edu.ufcg.geodengue.client.utils.Estado;
-import br.edu.ufcg.geodengue.shared.SessaoDTO;
+import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.maps.client.InfoWindow;
+import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.maps.client.MapUIOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.event.MapClickHandler;
@@ -21,20 +26,25 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 
 public class PanelMapa extends Composite {
 
 	private MapWidget mapWidget;
+	private GeoDengueServiceAsync server = GWT.create(GeoDengueService.class);
 
 	private Overlay bairros;
 	private Overlay focos;
 	private Overlay pessoas;
 	private Marker marcador;
 	private Polygon poligonoRaio;
+	private InfoWindow infoWindow = null;
 
-	public PanelMapa(SessaoDTO sessao) {
+	public PanelMapa() {
+		
 		mapWidget = new MapWidget(LatLng.newInstance(-7.231188, -35.886669), 13);
 		mapWidget.setSize("700px", "600px");
 		mapWidget.addMapClickHandler(new MapClickHandler() {
@@ -62,6 +72,8 @@ public class PanelMapa extends Composite {
 		mapWidget.setDoubleClickZoom(false);
 		mapWidget.setDraggable(true);
 
+//		infoWindow = mapWidget.getInfoWindow();
+
 		DecoratorPanel decoratorPanelMapa = new DecoratorPanel();
 		decoratorPanelMapa.add(mapWidget);
 
@@ -77,6 +89,7 @@ public class PanelMapa extends Composite {
 		tryRemoveOverlay(focos);
 		tryRemoveOverlay(pessoas);
 		tryRemoveOverlay(poligonoRaio);
+//		infoWindow.close();
 		
 		String hei = mapWidget.getSize().getHeight()+"";
 		String wid = mapWidget.getSize().getWidth()+"";
@@ -133,13 +146,76 @@ public class PanelMapa extends Composite {
 	private void trataCliqueNoMapa(LatLng latLng) {
 		PanelPrincipal panelPrincipal = PanelPrincipal.getInstance();
 		
-		if (panelPrincipal.botaoAtivo(Estado.CADASTRAR_FOCO)
+		if (marcador == null && (panelPrincipal.botaoAtivo(Estado.CADASTRAR_FOCO)
 				|| panelPrincipal.botaoAtivo(Estado.CADASTRAR_PESSOA)
-				|| panelPrincipal.botaoAtivo(Estado.CALCULAR_PESSOA_RAIO)) {
+				|| panelPrincipal.botaoAtivo(Estado.CALCULAR_PESSOA_RAIO))) {
 			cadastrarFocoOuPessoa(latLng);
+		} else {
+			adicionaToolTip(latLng);
 		}
 	}
 
+	private void adicionaToolTip(final LatLng latLongitude) {
+
+		try {
+			infoWindow.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		final AsyncCallback<TooltipDTO> tooltipCallBack = new AsyncCallback<TooltipDTO>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Ocorreu um erro na comunicacao com o Servidor! =X");
+			}
+
+			@Override
+			public void onSuccess(TooltipDTO result) {
+				PanelPrincipal panelPrincipal = PanelPrincipal.getInstance();
+				
+				String toolTipoText = "";
+				
+				
+				// TODO melhorar isso.. ta estranho o tooltip, sem contar o código repetido.
+				if (panelPrincipal.camadaAtiva(Camada.AREA_AGENTES) && !result.getBairros().isEmpty()) {
+					toolTipoText += "<center><h3>Bairro"+(result.getBairros().size() == 1 ? "" : "(S)")+"</h3></center>";
+					for (String desc : result.getBairros()) {
+						toolTipoText += "<p><b>Nome: </b>"+desc+"</p>";
+					}
+				}
+				
+				if (panelPrincipal.camadaAtiva(Camada.FOCOS) && !result.getFocos().isEmpty()) {
+					toolTipoText += "<center><h3>FOCO"+(result.getFocos().size() == 1 ? "" : "(S)")+"</h3></center>";
+					for (String desc : result.getFocos()) {
+						toolTipoText += "<p><b>Descrição: </b>"+desc+"</p>";
+					}
+				}
+				
+				if (panelPrincipal.camadaAtiva(Camada.PESSOAS_CONTAMINADAS) && !result.getPessoas().isEmpty()) {
+					toolTipoText += "<center><h3>PESSOA"+(result.getPessoas().size() == 1 ? "" : "(S)")+"</h3></center>";
+					for (String desc : result.getPessoas()) {
+						toolTipoText += "<p><b>Descrição: </b>"+desc+"</p>";
+					}
+				}
+				
+				if (!toolTipoText.isEmpty()) adicionaTooltip(result.getLongitude(), result.getLatitude(), toolTipoText);
+			}
+			
+		};
+		
+		server.recuperaDadosTooltip(latLongitude.getLatitude(), latLongitude.getLongitude(), tooltipCallBack);
+	}
+
+	private void adicionaTooltip(double latitude, double longitude, String texto) {
+	    if (infoWindow != null) {
+	    	infoWindow.close();
+	      }
+	    
+	    infoWindow = mapWidget.getInfoWindow();
+	    infoWindow.open(LatLng.newInstance(longitude, latitude), new InfoWindowContent(texto));
+	}
+	
 	private void cadastrarFocoOuPessoa(LatLng latLng) {
 		if(this.marcador == null) {
 			MarkerOptions opt = MarkerOptions.newInstance();
@@ -176,10 +252,6 @@ public class PanelMapa extends Composite {
 		}
 	}
 	
-	/*
-	 * CLASSES INTERNAS PARA TRATAMENTO DE EVENTOS!
-	 */
-
 	private class TrataAtualizarMapa implements Assinante<AtualizarMapaEvento> {
 		@Override
 		public void trataEvento(AtualizarMapaEvento evento) {
@@ -193,4 +265,8 @@ public class PanelMapa extends Composite {
 		mapWidget.addOverlay(poligonoRaio);
 	}
 
+	public void removePoligonoPessoasRaio() {
+		tryRemoveOverlay(poligonoRaio);
+	}
+	
 }

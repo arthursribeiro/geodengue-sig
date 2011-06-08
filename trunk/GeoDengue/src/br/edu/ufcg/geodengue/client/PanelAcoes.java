@@ -100,6 +100,7 @@ public class PanelAcoes extends Composite {
 				if(pessoasRaio.isDown()) PanelPrincipal.getInstance().adicionaCamada(Camada.PESSOAS_RAIO);
 				else {
 					PanelPrincipal.getInstance().removeCamada(Camada.PESSOAS_RAIO);
+					PanelPrincipal.getInstance().removePoligonoPessoasRaio();
 				}
 			}
 		});
