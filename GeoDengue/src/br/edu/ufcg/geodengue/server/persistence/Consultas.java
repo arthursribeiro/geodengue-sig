@@ -14,5 +14,5 @@ public class Consultas {
 	
 	public static final String BAIRROS_SEM_RESP = "SELECT b.gid AS id, b.nome AS nome FROM bairroscampina b WHERE b.gid NOT IN (SELECT bairroResp FROM agente) ORDER BY b.nome";
 	
-	public static final String DISTANCIA_PONTOS = "SELECT distance(p1.geom, p2.geom) AS distancia FROM Ponto p1, Ponto p2 WHERE p1.tipo = 'F' AND p2.tipo = 'F' AND p1.id = ? AND p2.id = ?";
+	public static final String DISTANCIA_PONTOS = "SELECT distance_sphere(p1.geom, p2.geom) AS distancia FROM Ponto p1, Ponto p2 WHERE p1.tipo = 'F' AND p2.tipo = 'F' AND p1.id = ? AND p2.id = ?";
 }
