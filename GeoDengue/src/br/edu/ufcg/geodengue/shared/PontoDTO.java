@@ -6,6 +6,8 @@ public class PontoDTO implements Serializable {
 
 	private static final long serialVersionUID = 7789787012069960980L;
 
+	private int id;
+	
 	private String descricao;
 	private double latitude;
 	private double longitude;
@@ -34,6 +36,14 @@ public class PontoDTO implements Serializable {
 	
 	public char getTipo() {
 		return tipo;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 }
