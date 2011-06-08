@@ -54,6 +54,7 @@ public class PanelMapa extends Composite {
 		});
 
 		MapUIOptions options = mapWidget.getDefaultUI();
+		options.setScaleControl(true);
 		options.setScrollwheel(true);
 		options.setDoubleClick(false);
 		options.setLargeMapControl3d(true);

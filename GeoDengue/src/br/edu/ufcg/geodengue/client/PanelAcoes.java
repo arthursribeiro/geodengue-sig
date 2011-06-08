@@ -28,10 +28,18 @@ public class PanelAcoes extends Composite {
 	private ToggleButton pessoasRaio;
 	private Button distanciaFocos;
 	
+	private PanelCadastraPonto panelCadastraFoco;
+	private PanelCadastraPonto panelCadastraPessoa;
+	private PanelPessoasRaio panelPessoasRaio;
+	
 	private List<Estado> estados;
 	
 	public PanelAcoes() {
 		this.estados = new ArrayList<Estado>();
+		
+		this.panelCadastraFoco = new PanelCadastraPonto("Texto de ajuda do Cadastrar Foco", true);
+		this.panelCadastraPessoa = new PanelCadastraPonto("Texto de ajuda do Cadastrar Pessoa", false);
+		this.panelPessoasRaio = new PanelPessoasRaio("Texto de ajuda do Calcular Pessoas em um Raio");
 		
 		criaBotoes();
 		
@@ -56,7 +64,7 @@ public class PanelAcoes extends Composite {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				trataClique(new PanelCadastraPonto("Texto de ajuda do Cadastrar Foco", true), Estado.CADASTRAR_FOCO, cadastrarFoco.isDown());
+				trataClique(panelCadastraFoco, Estado.CADASTRAR_FOCO, cadastrarFoco.isDown());
 			}
 		});
 		cadastrarFoco.addMouseDownHandler(new MouseDownHandler() {
@@ -72,7 +80,7 @@ public class PanelAcoes extends Composite {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				trataClique(new PanelCadastraPonto("Texto de ajuda do Cadastrar Pessoa", false), Estado.CADASTRAR_PESSOA, cadastrarPessoa.isDown());
+				trataClique(panelCadastraPessoa, Estado.CADASTRAR_PESSOA, cadastrarPessoa.isDown());
 			}
 		});
 		cadastrarPessoa.addMouseDownHandler(new MouseDownHandler() {
@@ -88,11 +96,10 @@ public class PanelAcoes extends Composite {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				trataClique(new PanelPessoasRaio("Texto de ajuda do Calcular Pessoas em um Raio"), Estado.CALCULAR_PESSOA_RAIO, pessoasRaio.isDown());
+				trataClique(panelPessoasRaio, Estado.CALCULAR_PESSOA_RAIO, pessoasRaio.isDown());
 				if(pessoasRaio.isDown()) PanelPrincipal.getInstance().adicionaCamada(Camada.PESSOAS_RAIO);
 				else {
 					PanelPrincipal.getInstance().removeCamada(Camada.PESSOAS_RAIO);
-//					EventBus.getInstance().publica(new AtualizarMapaEvento());
 				}
 			}
 		});
@@ -101,6 +108,7 @@ public class PanelAcoes extends Composite {
 			@Override
 			public void onMouseDown(MouseDownEvent event) {
 				if (!pessoasRaio.isDown()) untoggleButtons();
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
 			}
 		});
 		
