@@ -43,7 +43,7 @@ UPDATE bairroscampina SET nome = 'Jardim Continental' WHERE gid = 42;
 UPDATE bairroscampina SET nome = 'Bairro das Nacoes' WHERE gid = 43;
 UPDATE bairroscampina SET nome = 'Araxa' WHERE gid = 44;
 UPDATE bairroscampina SET nome = 'Presidente Medice' WHERE gid = 45;
-UPDATE bairroscampina SET nome = 'Tres Irmãs' WHERE gid = 46;
+UPDATE bairroscampina SET nome = 'Tres Irmas' WHERE gid = 46;
 UPDATE bairroscampina SET nome = 'Jardim Paulistano' WHERE gid = 47;
 UPDATE bairroscampina SET nome = 'Santa Terezinha' WHERE gid = 48;
 UPDATE bairroscampina SET nome = 'Lauritzen' WHERE gid = 49;
