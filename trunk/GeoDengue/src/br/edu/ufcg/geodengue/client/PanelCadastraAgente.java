@@ -4,10 +4,12 @@ import java.util.Map;
 
 import br.edu.ufcg.geodengue.client.service.GeoDengueService;
 import br.edu.ufcg.geodengue.client.service.GeoDengueServiceAsync;
+import br.edu.ufcg.geodengue.shared.PontoDTO;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -24,12 +26,10 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 	private GeoDengueServiceAsync server = GWT.create(GeoDengueService.class);
 	
 	private DecoratorPanel panelCadastra;
-	private ListBox lista;
 	private TextBox nome;
 	
 	public PanelCadastraAgente(String textoAjuda) {
 		
-		lista = new ListBox();
 		nome = new TextBox();
 		
 		limpaCampos();
@@ -45,12 +45,6 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 		hPanelDesc.add(lblDesc);
 		hPanelDesc.add(nome);
 		
-		HorizontalPanel hPanelDesc2 = new HorizontalPanel();
-		Label lblDesc2 = new Label("Bairro Responsavel: ");
-		hPanelDesc2.add(lblDesc2);
-		hPanelDesc2.add(lista);
-		
-		
 		Button botaoCadastrar = new Button("Cadastrar");
 		botaoCadastrar.addClickHandler(new ClickHandler() {
 			
@@ -61,7 +55,6 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 		});
 
 		vPanelFiltros.add(hPanelDesc);
-		vPanelFiltros.add(hPanelDesc2);
 		vPanelFiltros.add(botaoCadastrar);
 		
 		panelCadastra = new DecoratorPanel();
@@ -70,30 +63,9 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 		initWidget(panelCadastra);
 	}
 	
-	private void criaListBox() {
-		
-		final AsyncCallback<Map<String, String>> recuperaCallBack = new AsyncCallback<Map<String, String>>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Ocorreu um erro na comunicacao com o Servidor! =X");
-			}
-
-			@Override
-			public void onSuccess(Map<String, String> result) {
-				for (String chave : result.keySet()) {
-					lista.addItem(chave, result.get(chave));
-				}
-			}
-			
-		};
-		
-		server.recuperaBairrosSemResponsaveis(recuperaCallBack);
-	}
-
 	private void chamaServidorCadastrarAgente() {
 		
-		final AsyncCallback<Boolean> cadastraCallBack = new AsyncCallback<Boolean>() {
+		final AsyncCallback<Integer> cadastraCallBack = new AsyncCallback<Integer>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -101,10 +73,14 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 			}
 
 			@Override
-			public void onSuccess(Boolean result) {
+			public void onSuccess(Integer result) {
 				PanelPrincipal.getInstance().limpaDinamico();
 				PanelPrincipal.getInstance().untoggle();
-				String mensagem = result ? "Cadastrado com Sucesso! \\o/" : "Ocorreu um erro durante o Cadastro =/";
+				if (result == -1) {
+					Window.alert("Ja existe um agente responsavel por esse Bairro!");
+					return;
+				}
+				String mensagem = result == 1 ? "Cadastrado com Sucesso! \\o/" : "Ocorreu um erro durante o Cadastro =/";
 				Window.alert(mensagem);
 			}
 			
@@ -115,13 +91,21 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 			return;
 		}
 		
-		server.cadastraNovoAgente(nome.getValue(), lista.getValue(lista.getSelectedIndex()), cadastraCallBack);
+		Marker marcador = PanelPrincipal.getInstance().getMarcador();
+		if (marcador == null) {
+			Window.alert("Necessário marcar o ponto no mapa!");
+			return;
+		}
+		
+		try {
+			server.cadastraNovoAgente(nome.getValue(), new PontoDTO("Agente", marcador.getLatLng().getLatitude(), marcador.getLatLng().getLongitude(), 'A'), cadastraCallBack);
+		} catch (IllegalArgumentException e) {
+			Window.alert("Ja existe um agente para esse bairro!");
+		}
 	}
-
+	
 	public void limpaCampos() {
 		nome.setValue("");
-		lista.clear();
-		criaListBox();
 	}
 
 	

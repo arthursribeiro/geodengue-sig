@@ -83,12 +83,39 @@ public class GeoDengueDAO {
         s.close();
 	}
 	
-	public void insereAgente(String nome, String bairroResp) throws SQLException {
+	public void insereAgente(String nome, PontoDTO ponto) throws SQLException {
+		String pontoText = String.format("POINT(%f %f)", ponto.getLongitude(), ponto.getLatitude());
+		pontoText = pontoText.replace(",", ".");
+		
+		int id = getBairroID(pontoText);
+		if (id == -1) throw new IllegalArgumentException();
+		
         PreparedStatement s = conn.prepareStatement(Consultas.INSERT_AGENTE);      
         s.setString(1, nome);
-        s.setInt(2, Integer.parseInt(bairroResp));
+        s.setInt(2, id);
         s.execute();
         s.close();
+        
+        inserePonto(ponto);
+	}
+	
+	private int getBairroID(String pontoTexto) {
+		
+		int id = -1;
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(Consultas.BAIRRO_ID);
+			
+			s.setString(1, pontoTexto);
+			ResultSet rs = s.executeQuery();
+			while(rs.next()){
+				id = rs.getInt(1);
+			}
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}       
+		return id;
 	}
 	
 	public long pessoasRaio(RaioDTO raio) {
@@ -121,6 +148,7 @@ public class GeoDengueDAO {
 		tool.getFocos().addAll(recuperaDados(pontoText, Consultas.DADOS_FOCO));
 		tool.getPessoas().addAll(recuperaDados(pontoText, Consultas.DADOS_PESSOA));
 		tool.getBairros().addAll(recuperaDados(pontoText, Consultas.DADOS_BAIRRO));
+		tool.getAgentes().addAll(recuperaDados(pontoText, Consultas.BAIRRO_AGENTE));
 		
 		return tool;
 	}
@@ -153,7 +181,6 @@ public class GeoDengueDAO {
             s.setString(1, pontoText);
 
             String descricao;
-            
             ResultSet rs = s.executeQuery();
         	while(rs.next()){
             	descricao = (rs.getString("desc"));

@@ -26,8 +26,13 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	}
 	
 	@Override
-	public boolean cadastraNovoAgente(String nome, String bairro) {
-		return PersistenceFacade.getInstance().insereAgente(nome, bairro);
+	public int cadastraNovoAgente(String nome, PontoDTO ponto) {
+		try {
+			boolean b = PersistenceFacade.getInstance().insereAgente(nome, ponto);
+			return b ? 1 : 0;
+		} catch (Exception e) {
+			return -1;
+		}
 	}
 
 	@Override
