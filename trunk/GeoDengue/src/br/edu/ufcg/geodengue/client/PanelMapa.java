@@ -220,23 +220,30 @@ public class PanelMapa extends Composite {
 
 				// TODO melhorar isso.. ta estranho o tooltip, sem contar o código repetido.
 				if (panelPrincipal.camadaAtiva(Camada.AREA_AGENTES) && !result.getBairros().isEmpty()) {
-					toolTipoText += "<center><h3>Bairro"+(result.getBairros().size() == 1 ? "" : "(S)")+"</h3></center>";
+					toolTipoText += "<center><h3>Bairro"+(result.getBairros().size() == 1 ? "" : "S")+"</h3></center>";
 					for (String desc : result.getBairros()) {
 						toolTipoText += "<p><b>Nome: </b>"+desc+"</p>";
 					}
 				}
 
 				if (panelPrincipal.camadaAtiva(Camada.FOCOS) && !result.getFocos().isEmpty()) {
-					toolTipoText += "<center><h3>FOCO"+(result.getFocos().size() == 1 ? "" : "(S)")+"</h3></center>";
+					toolTipoText += "<center><h3>FOCO"+(result.getFocos().size() == 1 ? "" : "S")+"</h3></center>";
 					for (String desc : result.getFocos()) {
 						toolTipoText += "<p><b>Descrição: </b>"+desc+"</p>";
 					}
 				}
 
 				if (panelPrincipal.camadaAtiva(Camada.PESSOAS_CONTAMINADAS) && !result.getPessoas().isEmpty()) {
-					toolTipoText += "<center><h3>PESSOA"+(result.getPessoas().size() == 1 ? "" : "(S)")+"</h3></center>";
+					toolTipoText += "<center><h3>PESSOA"+(result.getPessoas().size() == 1 ? "" : "S")+"</h3></center>";
 					for (String desc : result.getPessoas()) {
 						toolTipoText += "<p><b>Descrição: </b>"+desc+"</p>";
+					}
+				}
+				
+				if (panelPrincipal.camadaAtiva(Camada.AGENTES) && !result.getAgentes().isEmpty()) {
+					toolTipoText += "<center><h3>AGENTE"+(result.getAgentes().size() == 1 ? "" : "S")+"</h3></center>";
+					for (String desc : result.getAgentes()) {
+						toolTipoText += "<p><b>Nome do Agente: </b>"+desc+"</p>";
 					}
 				}
 
