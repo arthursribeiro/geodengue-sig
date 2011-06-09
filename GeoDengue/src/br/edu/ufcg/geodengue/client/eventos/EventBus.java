@@ -36,6 +36,22 @@ public class EventBus {
 		this.assinantes.get(tipoDeEvento).add(assinante);
 	}
 
+	@SuppressWarnings("rawtypes")
+	public void removeAssinante(TiposDeEventos tipoDeEvento, Assinante assinante) {
+		if (tipoDeEvento == null) {
+			throw new IllegalArgumentException("tipoDeEvento nao pode ser null");
+		}
+		if (assinante == null) {
+			throw new IllegalArgumentException("assinante nao pode ser null");
+		}
+
+		if (!this.assinantes.containsKey(tipoDeEvento)) {
+			throw new IllegalArgumentException("assinante nao cadastrado");
+		}
+		
+		this.assinantes.get(tipoDeEvento).remove(assinante);
+	}
+	
 	public void publica(EventoBase evento) {
 		if (evento == null) {
 			throw new IllegalArgumentException("evento nao pode ser null");

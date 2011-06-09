@@ -8,6 +8,7 @@ public class Constantes {
 	private static final String GEOSERVER_BAIRROS_LAYER = "layers=geodengue:bairroscampina";
 	private static final String GEOSERVER_FOCOS_LAYER = "layers=geodengue:focos";
 	private static final String GEOSERVER_PESSOAS_LAYER = "layers=geodengue:pessoas";
+	private static final String GEOSERVER_AGENTES_LAYER = "layers=geodengue:agentes";
 	private static final String GEOSERVER_GET_MAP = "request=GetMap";
 	private static final String GEOSERVER_PNG = "format=image/png";
 	private static final String GEOSERVER_SRS = "srs=EPSG:4326";
@@ -30,5 +31,8 @@ public class Constantes {
 	
 	public static final String GEOSERVER_MAPA_PESSOAS = GEOSERVER_MAPA_SEM_LAYER + E_COMERCIAL
 			+ GEOSERVER_PESSOAS_LAYER;
+	
+	public static final String GEOSERVER_MAPA_AGENTES = GEOSERVER_MAPA_SEM_LAYER + E_COMERCIAL
+			+ GEOSERVER_AGENTES_LAYER;
 
 }

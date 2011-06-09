@@ -40,6 +40,7 @@ public class PanelMapa extends Composite {
 	private Overlay bairros;
 	private Overlay focos;
 	private Overlay pessoas;
+	private Overlay agentes;
 	private Marker marcador;
 	private Polygon poligonoRaio;
 	private InfoWindow infoWindow = null;
@@ -89,6 +90,7 @@ public class PanelMapa extends Composite {
 		tryRemoveOverlay(bairros);
 		tryRemoveOverlay(focos);
 		tryRemoveOverlay(pessoas);
+		tryRemoveOverlay(agentes);
 		tryRemoveOverlay(poligonoRaio);
 		//		infoWindow.close();
 
@@ -142,6 +144,20 @@ public class PanelMapa extends Composite {
 			pessoas = new GroundOverlay(url, bounds);
 			mapWidget.addOverlay(pessoas);
 		}
+		
+		if (panelPrincipal.camadaAtiva(Camada.AGENTES)) {
+			String boundsPoints = "";
+			boundsPoints += (bounds.getSouthWest().getLongitude())+",";
+			boundsPoints += (bounds.getSouthWest().getLatitude())+",";
+			boundsPoints += (bounds.getNorthEast().getLongitude())+",";
+			boundsPoints += (bounds.getNorthEast().getLatitude());
+
+			String url = Constantes.GEOSERVER_MAPA_AGENTES;
+			url += "&styles=&bbox="+boundsPoints+"&width="+wid+"&height="+hei;
+
+			agentes = new GroundOverlay(url, bounds);
+			mapWidget.addOverlay(agentes);
+		}
 	}
 
 	private void trataCliqueNoMapa(LatLng latLng) {
@@ -149,6 +165,7 @@ public class PanelMapa extends Composite {
 
 		if (marcador == null && (panelPrincipal.botaoAtivo(Estado.CADASTRAR_FOCO)
 				|| panelPrincipal.botaoAtivo(Estado.CADASTRAR_PESSOA)
+				|| panelPrincipal.botaoAtivo(Estado.CADASTRAR_AGENTE)
 				|| panelPrincipal.botaoAtivo(Estado.CALCULAR_PESSOA_RAIO))) {
 			cadastrarFocoOuPessoa(latLng);
 		} else if(panelPrincipal.botaoAtivo(Estado.DISTANCIA_DOIS_FOCOS)) {

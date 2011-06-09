@@ -31,6 +31,8 @@ public class PanelPessoasRaio extends Composite {
 	private TextBox raio;
 	private TextBox pessoasRaio;
 	
+	private TrataNovoCalculoPoligono trataCalculo;
+	
 	public PanelPessoasRaio(String textoAjuda) {
 		
 		VerticalPanel vPanelFiltros = new VerticalPanel();
@@ -76,7 +78,8 @@ public class PanelPessoasRaio extends Composite {
 		
 		initWidget(panelPessoasRaio);
 		
-		EventBus.getInstance().registraAssinante(TiposDeEventos.MODIFICOU_LOCAL_MARCADOR, new TrataNovoCalculoPoligono());
+
+		
 	}
 	
 	private void calculaPessoasRaio() {
@@ -112,6 +115,18 @@ public class PanelPessoasRaio extends Composite {
 		};
 		
 		server.pessoasRaio(new RaioDTO(marcador.getLatLng().getLatitude(), marcador.getLatLng().getLongitude(), raioValor), calculaCallBack);
+	}
+	
+	public void iniciaTratador() {
+		trataCalculo = new TrataNovoCalculoPoligono();
+	}
+	
+	public void assinaTratador() {
+		EventBus.getInstance().registraAssinante(TiposDeEventos.MODIFICOU_LOCAL_MARCADOR, trataCalculo);
+	}
+	
+	public void removeTratador() {
+		EventBus.getInstance().removeAssinante(TiposDeEventos.MODIFICOU_LOCAL_MARCADOR, trataCalculo);
 	}
 	
 	private class TrataNovoCalculoPoligono implements Assinante<MarcadorArrastadoEvento> {

@@ -13,6 +13,7 @@ public class TooltipDTO implements Serializable {
 	List<String> focos;
 	List<String> bairros;
 	List<String> pessoas;
+	List<String> agentes;
 	
 	private double latitude;
 	private double longitude;
@@ -23,6 +24,7 @@ public class TooltipDTO implements Serializable {
 		this.focos = new ArrayList<String>();
 		this.pessoas = new ArrayList<String>();
 		this.bairros = new ArrayList<String>();
+		this.agentes = new ArrayList<String>();
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
@@ -53,6 +55,10 @@ public class TooltipDTO implements Serializable {
 
 	public List<String> getBairros() {
 		return bairros;
+	}
+
+	public List<String> getAgentes() {
+		return agentes;
 	}
 
 }

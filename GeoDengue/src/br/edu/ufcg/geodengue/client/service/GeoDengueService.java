@@ -23,7 +23,7 @@ public interface GeoDengueService extends RemoteService {
 	
 	public Map<String, String> recuperaBairrosSemResponsaveis();
 	
-	public boolean cadastraNovoAgente(String nome, String bairro);
+	public int cadastraNovoAgente(String nome, PontoDTO ponto);
 	
 	public PontoDTO recuperaFoco(double latitude, double longitude);
 	

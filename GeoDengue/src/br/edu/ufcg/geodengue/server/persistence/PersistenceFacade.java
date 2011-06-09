@@ -49,9 +49,16 @@ public class PersistenceFacade {
 		}
 	}
 	
-	public boolean insereAgente(String nome, String bairro) {
+	public boolean insereAgente(String nome, PontoDTO ponto) {
+		
+		TooltipDTO tool = dao.recuperaDadosTooltip(ponto.getLatitude(), ponto.getLongitude());
+		
+		if (!tool.getAgentes().isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+		
 		try {
-			dao.insereAgente(nome, bairro);
+			dao.insereAgente(nome, ponto);
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -21,7 +21,7 @@ public interface GeoDengueServiceAsync {
 	
 	public void recuperaBairrosSemResponsaveis(AsyncCallback<Map<String, String>> callback);
 	
-	public void cadastraNovoAgente(String nome, String bairro, AsyncCallback<Boolean> callback);
+	public void cadastraNovoAgente(String nome, PontoDTO ponto, AsyncCallback<Integer> callback);
 	
 	public void recuperaFoco(double latitude, double longitude, AsyncCallback<PontoDTO> callback);
 	

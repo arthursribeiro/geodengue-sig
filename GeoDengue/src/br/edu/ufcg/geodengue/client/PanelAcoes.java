@@ -45,6 +45,8 @@ public class PanelAcoes extends Composite {
 		this.panelPessoasRaio = new PanelPessoasRaio("Texto de ajuda do Calcular Pessoas em um Raio");
 		this.panelDistanciaFocos = new PanelDistanciaFocos("Texto de ajuda do Calcular Pessoas em um Raio");
 		
+		this.panelPessoasRaio.iniciaTratador();
+		
 		criaBotoes();
 		
 		HorizontalPanel hPanel = new HorizontalPanel();
@@ -121,8 +123,11 @@ public class PanelAcoes extends Composite {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				trataClique(panelPessoasRaio, Estado.CALCULAR_PESSOA_RAIO, pessoasRaio.isDown());
-				if(pessoasRaio.isDown()) PanelPrincipal.getInstance().adicionaCamada(Camada.PESSOAS_RAIO);
-				else {
+				if(pessoasRaio.isDown()) {
+					panelPessoasRaio.assinaTratador();
+					PanelPrincipal.getInstance().adicionaCamada(Camada.PESSOAS_RAIO);
+				} else {
+					panelPessoasRaio.removeTratador();
 					PanelPrincipal.getInstance().removeCamada(Camada.PESSOAS_RAIO);
 					PanelPrincipal.getInstance().removePoligonoPessoasRaio();
 				}
