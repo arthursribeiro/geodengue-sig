@@ -44,7 +44,7 @@ public class Consultas {
 													"AND p1.id = ? " +
 													"AND p2.id = ?";
 	
-	public static final String BAIRRO_AGENTE = "SELECT p.descricao AS desc, p.id AS id " +
+	public static final String BAIRRO_AGENTE = "SELECT * " +
 												"FROM Ponto p, bairroscampina ba, Agente a " +
 												"WHERE p.tipo = 'A' AND " +
 												"a.bairroResp = ba.gid AND " +
@@ -54,4 +54,7 @@ public class Consultas {
 	public static final String BAIRRO_ID = "SELECT ba.gid " +
 											"FROM bairroscampina ba " +
 											"WHERE Contains(ba.the_geom, Buffer(Transform(GeometryFromText(?, 4326),29195), 0.001))";
+	
+	
+	public static final String TEM_AGENTE_BAIRRO = "SELECT count(a.nome) AS qnt FROM Agente a WHERE a.bairroResp = ?";
 }

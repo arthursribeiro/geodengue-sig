@@ -90,6 +90,9 @@ public class GeoDengueDAO {
 		int id = getBairroID(pontoText);
 		if (id == -1) throw new IllegalArgumentException();
 		
+		int qnt = hasAgenteBairro(id);
+		if (qnt > 0) throw new IllegalArgumentException();
+		
         PreparedStatement s = conn.prepareStatement(Consultas.INSERT_AGENTE);      
         s.setString(1, nome);
         s.setInt(2, id);
@@ -97,6 +100,23 @@ public class GeoDengueDAO {
         s.close();
         
         inserePonto(ponto);
+	}
+	
+	private int hasAgenteBairro(int idBairro) {
+		int qnt = -1;
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(Consultas.TEM_AGENTE_BAIRRO);
+			s.setInt(1, idBairro);
+			ResultSet rs = s.executeQuery();
+			while(rs.next()){
+				qnt = rs.getInt(1);
+			}
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}       
+		return qnt;
 	}
 	
 	private int getBairroID(String pontoTexto) {
@@ -148,7 +168,13 @@ public class GeoDengueDAO {
 		tool.getFocos().addAll(recuperaDados(pontoText, Consultas.DADOS_FOCO));
 		tool.getPessoas().addAll(recuperaDados(pontoText, Consultas.DADOS_PESSOA));
 		tool.getBairros().addAll(recuperaDados(pontoText, Consultas.DADOS_BAIRRO));
+		System.out.println("--------------------");
 		tool.getAgentes().addAll(recuperaDados(pontoText, Consultas.BAIRRO_AGENTE));
+		
+		System.out.println("##############");
+		System.out.println(Consultas.BAIRRO_AGENTE);
+		System.out.println(pontoText);
+		System.out.println("##############");
 		
 		return tool;
 	}
@@ -180,10 +206,15 @@ public class GeoDengueDAO {
             PreparedStatement s = conn.prepareStatement(consulta);      
             s.setString(1, pontoText);
 
+            if(consulta.equals(Consultas.BAIRRO_AGENTE)) System.out.println("AAAAAAAAAEEEEEEEEEEE");
+            
             String descricao;
             ResultSet rs = s.executeQuery();
         	while(rs.next()){
+        		System.out.println("9999999999999999999999");
             	descricao = (rs.getString("desc"));
+            	System.out.println("AFFE" + rs.getObject("desc"));
+            	System.out.println(descricao);
             	if (!descricao.isEmpty()) dados.add(descricao);
             }
             s.close();
