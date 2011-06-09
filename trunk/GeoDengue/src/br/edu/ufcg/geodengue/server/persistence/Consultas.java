@@ -44,7 +44,7 @@ public class Consultas {
 													"AND p1.id = ? " +
 													"AND p2.id = ?";
 	
-	public static final String BAIRRO_AGENTE = "SELECT * " +
+	public static final String BAIRRO_AGENTE = "SELECT p.descricao AS desc " +
 												"FROM Ponto p, bairroscampina ba, Agente a " +
 												"WHERE p.tipo = 'A' AND " +
 												"a.bairroResp = ba.gid AND " +
