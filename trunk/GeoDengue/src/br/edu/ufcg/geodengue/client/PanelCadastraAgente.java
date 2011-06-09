@@ -98,7 +98,7 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 		}
 		
 		try {
-			server.cadastraNovoAgente(nome.getValue(), new PontoDTO("Agente", marcador.getLatLng().getLatitude(), marcador.getLatLng().getLongitude(), 'A'), cadastraCallBack);
+			server.cadastraNovoAgente(nome.getValue(), new PontoDTO(nome.getValue(), marcador.getLatLng().getLatitude(), marcador.getLatLng().getLongitude(), 'A'), cadastraCallBack);
 		} catch (IllegalArgumentException e) {
 			Window.alert("Ja existe um agente para esse bairro!");
 		}
