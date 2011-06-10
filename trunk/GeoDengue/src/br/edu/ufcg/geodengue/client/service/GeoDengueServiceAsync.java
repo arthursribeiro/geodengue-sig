@@ -7,6 +7,7 @@ import br.edu.ufcg.geodengue.shared.AreaAgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
+import br.edu.ufcg.geodengue.shared.SimularDTO;
 import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -34,5 +35,9 @@ public interface GeoDengueServiceAsync {
 	public void recuperaDadosAreaAgente(double latitude, double longitude, AsyncCallback<AreaAgenteDTO> callback);
 
 	public void focosDistancia(double latitude, double longitude, double distancia, AsyncCallback<List<String>> calculaCallBack);
+	
+	public void getPontosEmBairro(double latitude, double longitude, AsyncCallback<List<String>> calculaCallBack);
+	
+	public void simulaDemitir(double latitude, double longitude, AsyncCallback<List<SimularDTO>> calculaCallBack);
 
 }

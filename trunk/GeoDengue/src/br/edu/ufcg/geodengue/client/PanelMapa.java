@@ -1,5 +1,8 @@
 package br.edu.ufcg.geodengue.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.edu.ufcg.geodengue.client.eventos.Assinante;
 import br.edu.ufcg.geodengue.client.eventos.AtualizarMapaEvento;
 import br.edu.ufcg.geodengue.client.eventos.EventBus;
@@ -27,6 +30,7 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.maps.client.overlay.Polyline;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
@@ -44,9 +48,11 @@ public class PanelMapa extends Composite {
 	private Marker marcador;
 	private Polygon poligonoRaio;
 	private InfoWindow infoWindow = null;
-
+	private Polyline rota;
+	private List<Marker> marca;
+	
 	public PanelMapa() {
-
+		marca = new ArrayList<Marker>();
 		mapWidget = new MapWidget(LatLng.newInstance(-7.231188, -35.886669), 13);
 		mapWidget.setSize("700px", "600px");
 		mapWidget.addMapClickHandler(new MapClickHandler() {
@@ -74,14 +80,13 @@ public class PanelMapa extends Composite {
 		mapWidget.setDoubleClickZoom(false);
 		mapWidget.setDraggable(true);
 
-		//		infoWindow = mapWidget.getInfoWindow();
-
 		DecoratorPanel decoratorPanelMapa = new DecoratorPanel();
 		decoratorPanelMapa.add(mapWidget);
 
 		initWidget(decoratorPanelMapa);
 
 		EventBus.getInstance().registraAssinante(TiposDeEventos.ATUALIZAR_MAPA, new TrataAtualizarMapa());
+		
 	}
 
 	private void mudouDadosDoMapa(){
@@ -92,7 +97,11 @@ public class PanelMapa extends Composite {
 		tryRemoveOverlay(pessoas);
 		tryRemoveOverlay(agentes);
 		tryRemoveOverlay(poligonoRaio);
-		//		infoWindow.close();
+		tryRemoveOverlay(rota);
+		
+		for (Marker ma : marca) {
+			tryRemoveOverlay(ma);
+		}
 
 		String hei = mapWidget.getSize().getHeight()+"";
 		String wid = mapWidget.getSize().getWidth()+"";
@@ -115,6 +124,15 @@ public class PanelMapa extends Composite {
 
 		if (panelPrincipal.camadaAtiva(Camada.PESSOAS_RAIO)) {
 			if (poligonoRaio != null) mapWidget.addOverlay(poligonoRaio);
+		}
+		
+		if (panelPrincipal.camadaAtiva(Camada.ROTA)) {
+			if (rota != null) {
+				mapWidget.addOverlay(rota);
+				for (Marker ma : marca) {
+					mapWidget.addOverlay(ma);
+				}
+			}
 		}
 
 		if (panelPrincipal.camadaAtiva(Camada.FOCOS)) {
@@ -171,7 +189,7 @@ public class PanelMapa extends Composite {
 			cadastrarFocoOuPessoa(latLng);
 		} else if(panelPrincipal.botaoAtivo(Estado.DISTANCIA_DOIS_FOCOS)) {
 			trataDistanciaDoisFocos(latLng);
-		} else if (panelPrincipal.botaoAtivo(Estado.AREA_AGENTE)) {
+		} else if (panelPrincipal.botaoAtivo(Estado.AREA_AGENTE) || panelPrincipal.botaoAtivo(Estado.ROTA) || panelPrincipal.botaoAtivo(Estado.SIMULA_DEMITIR)) {
 			trataGetDadosAgente(latLng);
 		} else {
 			adicionaToolTip(latLng);
@@ -189,8 +207,17 @@ public class PanelMapa extends Composite {
 			@Override
 			public void onSuccess(PontoDTO result) {
 				if(result != null) {
-					PanelAreaAgente panelAreaAgente = PanelPrincipal.getInstance().getPanelAreaAgente();
-					panelAreaAgente.povoa(result);
+					PanelPrincipal panelPrincipal = PanelPrincipal.getInstance();
+					if (panelPrincipal.botaoAtivo(Estado.ROTA)) {
+						PanelRotaAgente panelRotaAgente = PanelPrincipal.getInstance().getPanelRotaAgente();
+						panelRotaAgente.povoa(result);
+					} else if (panelPrincipal.botaoAtivo(Estado.SIMULA_DEMITIR)) {
+						PanelSimulaDemitir panelSimulaDemitir = PanelPrincipal.getInstance().getPanelSimulaDemitir();
+						panelSimulaDemitir.povoa(result);
+					} else {
+						PanelAreaAgente panelAreaAgente = PanelPrincipal.getInstance().getPanelAreaAgente();
+						panelAreaAgente.povoa(result);
+					}
 				}
 			}
 
@@ -339,5 +366,31 @@ public class PanelMapa extends Composite {
 	public void removePoligonoPessoasRaio() {
 		tryRemoveOverlay(poligonoRaio);
 	}
+	
+	public void adicionaPolyline(Polyline novaRota, List<Marker> lista) {
+		tryRemoveOverlay(rota);
+		for (Marker ma : marca) {
+			tryRemoveOverlay(ma);
+		}
+		this.rota = novaRota;
+		this.marca = lista;
+		mapWidget.addOverlay(rota);
+		for (Marker ma : marca) {
+			mapWidget.addOverlay(ma);
+		}
+	}
 
+	public void removePolyline() {
+		tryRemoveOverlay(rota);
+		for (Marker ma : marca) {
+			tryRemoveOverlay(ma);
+		}
+		marca = new ArrayList<Marker>();
+		rota = null;
+	}
+
+	public MapWidget getMapWidget() {
+		return this.mapWidget;
+	}
+	
 }
