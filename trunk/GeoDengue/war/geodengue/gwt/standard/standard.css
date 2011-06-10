@@ -13,7 +13,7 @@
  */
 
 body, table td, select {
-  font-family: Arial Unicode MS, Arial, sans-serif;
+  font-family: "Verdana", Arial Unicode MS, Arial, sans-serif;
   font-size: small;
 }
 pre {
@@ -25,11 +25,12 @@ body {
   margin: 0px;
   border: 0px;
   padding: 0px;
-  background: #fff;
+  background: #00642d;
   direction: ltr;
 }
 a, a:visited, a:hover {
-  color: #0000AA;
+  color: #007b37;
+  font-weight: bold;
 }
 
 /**
@@ -51,14 +52,14 @@ a, a:visited, a:hover {
   font-size: small;
   cursor: pointer;
   cursor: hand;
-  background: url("images/hborder.png") repeat-x 0px -27px;
+  background: url("images/fundobotao.png") repeat-x #e7e36e;    
   border: 1px outset #ccc;
 }
 .gwt-Button:active {
   border: 1px inset #ccc;
 }
 .gwt-Button:hover {
-  border-color: #9cf #69e #69e #7af;
+	background: url("images/fundobotao2.png") repeat-x #ebe639;
 }
 .gwt-Button[disabled] {
   cursor: default;
@@ -76,46 +77,7 @@ a, a:visited, a:hover {
 
 .gwt-DecoratorPanel {
 }
-.gwt-DecoratorPanel .topCenter,
-.gwt-DecoratorPanel .bottomCenter {
-  background: url(images/hborder.png) repeat-x;
-}
-.gwt-DecoratorPanel .middleLeft,
-.gwt-DecoratorPanel .middleRight {
-  background: url(images/vborder.png) repeat-y;
-}
-.gwt-DecoratorPanel .topLeftInner,
-.gwt-DecoratorPanel .topRightInner,
-.gwt-DecoratorPanel .bottomLeftInner,
-.gwt-DecoratorPanel .bottomRightInner {
-  width: 5px;
-  height: 5px;
-  zoom: 1;
-}
-.gwt-DecoratorPanel .topLeft {
-  background: url(images/corner.png) no-repeat 0px 0px;
-  -background: url(images/corner_ie6.png) no-repeat 0px 0px;
-}
-.gwt-DecoratorPanel .topRight {
-  background: url(images/corner.png) no-repeat -5px 0px;
-  -background: url(images/corner_ie6.png) no-repeat -5px 0px;
-}
-.gwt-DecoratorPanel .bottomLeft {
-  background: url(images/corner.png) no-repeat 0px -5px;
-  -background: url(images/corner_ie6.png) no-repeat 0px -5px;
-}
-.gwt-DecoratorPanel .bottomRight {
-  background: url(images/corner.png) no-repeat -5px -5px;
-  -background: url(images/corner_ie6.png) no-repeat -5px -5px;
-}
-* html .gwt-DecoratorPanel .topLeftInner,
-* html .gwt-DecoratorPanel .topRightInner,
-* html .gwt-DecoratorPanel .bottomLeftInner,
-* html .gwt-DecoratorPanel .bottomRightInner {
-  width: 5px;
-  height: 5px;
-  overflow: hidden;
-}
+
 
 .gwt-DialogBox .Caption {
   background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
@@ -930,8 +892,15 @@ a, a:visited, a:hover {
 .gwt-ToggleButton-down-disabled {
   margin: 0;
   text-decoration: none;
-  background: url("images/hborder.png") repeat-x 0px -27px;
+  background: url("images/fundobotao.png") repeat-x #e7e36e;
 }
+.gwt-ToggleButton-down,
+.gwt-ToggleButton-up-hovering,
+.gwt-ToggleButton-down-hovering,
+.gwt-ToggleButton-down-disabled {
+	background: url("images/fundobotao2.png") repeat-x #ebe639;	 
+}
+
 .gwt-ToggleButton-up,
 .gwt-ToggleButton-up-hovering,
 .gwt-ToggleButton-up-disabled {
@@ -943,8 +912,6 @@ a, a:visited, a:hover {
   cursor: hand;
 }
 .gwt-ToggleButton-up-hovering {
-  border: 1px outset;
-  border-color: #9cf #69e #69e #7af;
   cursor: pointer;
   cursor: hand;
 }
@@ -962,14 +929,13 @@ a, a:visited, a:hover {
 }
 .gwt-ToggleButton-down {
   background-position: 0 -513px;
-  border: 1px inset #ccc;
+  border: 2px inset #f0e900;
   cursor: pointer;
   cursor: hand;
 }
 .gwt-ToggleButton-down-hovering {
   background-position: 0 -513px;
-  border: 1px inset;
-  border-color: #9cf #69e #69e #7af;
+  border: 2px inset #f0e900;
   cursor: pointer;
   cursor: hand;
 }
