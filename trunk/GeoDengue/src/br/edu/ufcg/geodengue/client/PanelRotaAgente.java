@@ -79,11 +79,7 @@ public class PanelRotaAgente extends Composite implements PanelToggle {
 				PanelPrincipal.getInstance().removePolyline();
 				comprimento.setText("");
 				qntFocos.setText(result.getPontos().size()+"");
-				
-				if (result.getPontos().size() >= 2) {
-					colocaRota(ponto);
-				}
-				
+				colocaRota(ponto);
 			}
 			
 		};
