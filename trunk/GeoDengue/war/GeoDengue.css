@@ -1,6 +1,5 @@
 /** Add css rules here for your application. */
 
-
 /** Example rules used by the template application (remove for your app) */
 h1 {
   font-weight: bold;
@@ -47,5 +46,10 @@ h1 {
 
 .inputText {
 	border: 3px double #CCCCCC;
-	width: 230px;	
+	width: 230px;
+}
+
+.gwt-DecoratorPanel {
+	background-color: #579975;
+	border: 0;
 }
