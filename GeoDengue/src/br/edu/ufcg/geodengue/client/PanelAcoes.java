@@ -47,12 +47,12 @@ public class PanelAcoes extends Composite {
 	public PanelAcoes() {
 		this.estados = new ArrayList<Estado>();
 		
-		this.panelCadastraFoco = new PanelCadastraPonto("Texto de ajuda do Cadastrar Foco", true);
-		this.panelCadastraPessoa = new PanelCadastraPonto("Texto de ajuda do Cadastrar Pessoa", false);
-		this.panelCadastraAgente = new PanelCadastraAgente("Texto de ajuda do Cadastrar Agente");
-		this.panelPessoasRaio = new PanelPessoasRaio("Texto de ajuda do Calcular Pessoas em um Raio");
-		this.panelFocosADistancia = new PanelFocosDistancia("Texto de ajuda do Focos a uma distancia X");
-		this.panelDistanciaFocos = new PanelDistanciaFocos("Texto de ajuda do Calcular Pessoas em um Raio");
+		this.panelCadastraFoco = new PanelCadastraPonto("Clique no mapa e entre com uma descricao para cadastrar um novo foco", true);
+		this.panelCadastraPessoa = new PanelCadastraPonto("Clique no mapa e entre com uma descricao para cadastrar uma nova pessoa infectada", false);
+		this.panelCadastraAgente = new PanelCadastraAgente("Clique no mapa e entre com um nome para cadastrar um novo agente");
+		this.panelPessoasRaio = new PanelPessoasRaio("Diga o tamanho do raio para calcular a quantidade de pessoas infectadas nessa area");
+		this.panelFocosADistancia = new PanelFocosDistancia("Clique no mapa e forneca uma distancia para encontrar os focos que estao a essa distancia do ponto");
+		this.panelDistanciaFocos = new PanelDistanciaFocos("Selecione dois focos no mapa para calcular a distancia entre os mesmos");
 		this.panelAreaAgente = new PanelAreaAgente();
 		this.panelRotaAgente = new PanelRotaAgente();
 		this.panelSimulaDemitir = new PanelSimulaDemitir();
@@ -183,7 +183,7 @@ public class PanelAcoes extends Composite {
 			}
 		});
 
-		distanciaFocos = new ToggleButton("Distância entre Focos");
+		distanciaFocos = new ToggleButton("Distancia entre Focos");
 		distanciaFocos.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			
 			@Override
@@ -200,7 +200,7 @@ public class PanelAcoes extends Composite {
 			}
 		});
 		
-		areaDoAgente = new ToggleButton("Área do Agente");
+		areaDoAgente = new ToggleButton("Area do Agente");
 		areaDoAgente.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			
 			@Override
