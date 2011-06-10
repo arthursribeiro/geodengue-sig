@@ -1,7 +1,9 @@
 package br.edu.ufcg.geodengue.client.service;
 
+import java.util.List;
 import java.util.Map;
 
+import br.edu.ufcg.geodengue.shared.AreaAgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
@@ -25,6 +27,12 @@ public interface GeoDengueServiceAsync {
 	
 	public void recuperaFoco(double latitude, double longitude, AsyncCallback<PontoDTO> callback);
 	
+	public void recuperaAgente(double latitude, double longitude, AsyncCallback<PontoDTO> callback);
+	
 	public void calculaDistanciaEntreFocos(PontoDTO p1, PontoDTO p2, AsyncCallback<Double> callback);
+	
+	public void recuperaDadosAreaAgente(double latitude, double longitude, AsyncCallback<AreaAgenteDTO> callback);
+
+	public void focosDistancia(double latitude, double longitude, double distancia, AsyncCallback<List<String>> calculaCallBack);
 
 }

@@ -14,9 +14,9 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PanelAcoes extends Composite {
@@ -27,12 +27,18 @@ public class PanelAcoes extends Composite {
 	private ToggleButton cadastrarPessoa;
 	private ToggleButton pessoasRaio;
 	private ToggleButton distanciaFocos;
+	private ToggleButton rotaDeAgente;
+	private ToggleButton areaDoAgente;
+	private ToggleButton simularDemissao;
+	private ToggleButton focosADistancia;
 	
 	private PanelCadastraPonto panelCadastraFoco;
 	private PanelCadastraPonto panelCadastraPessoa;
 	private PanelCadastraAgente panelCadastraAgente;
 	private PanelPessoasRaio panelPessoasRaio;
+	private PanelFocosDistancia panelFocosADistancia;
 	private PanelDistanciaFocos panelDistanciaFocos;
+	private PanelAreaAgente panelAreaAgente;
 	
 	private List<Estado> estados;
 	
@@ -43,22 +49,30 @@ public class PanelAcoes extends Composite {
 		this.panelCadastraPessoa = new PanelCadastraPonto("Texto de ajuda do Cadastrar Pessoa", false);
 		this.panelCadastraAgente = new PanelCadastraAgente("Texto de ajuda do Cadastrar Agente");
 		this.panelPessoasRaio = new PanelPessoasRaio("Texto de ajuda do Calcular Pessoas em um Raio");
+		this.panelFocosADistancia = new PanelFocosDistancia("Texto de ajuda do Focos a uma distancia X");
 		this.panelDistanciaFocos = new PanelDistanciaFocos("Texto de ajuda do Calcular Pessoas em um Raio");
+		this.panelAreaAgente = new PanelAreaAgente();
 		
 		this.panelPessoasRaio.iniciaTratador();
+		this.panelFocosADistancia.iniciaTratador();
 		
 		criaBotoes();
 		
-		HorizontalPanel hPanel = new HorizontalPanel();
-		hPanel.setSpacing(5);
-		hPanel.add(cadastrarAgente);
-		hPanel.add(cadastrarFoco);
-		hPanel.add(cadastrarPessoa);
-		hPanel.add(pessoasRaio);
-		hPanel.add(distanciaFocos);
+		VerticalPanel vPanel = new VerticalPanel();
+		vPanel.setWidth("200px");
+		vPanel.setSpacing(5);
+		vPanel.add(cadastrarAgente);
+		vPanel.add(cadastrarFoco);
+		vPanel.add(cadastrarPessoa);
+		vPanel.add(pessoasRaio);
+		vPanel.add(distanciaFocos);
+		vPanel.add(focosADistancia);
+		vPanel.add(areaDoAgente);
+		vPanel.add(rotaDeAgente);
+		vPanel.add(simularDemissao);
 		
 		panelAcoes = new DecoratorPanel();
-		panelAcoes.add(hPanel);
+		panelAcoes.add(vPanel);
 		
 		initWidget(panelAcoes);
 		
@@ -141,6 +155,28 @@ public class PanelAcoes extends Composite {
 				EventBus.getInstance().publica(new AtualizarMapaEvento());
 			}
 		});
+		
+		focosADistancia = new ToggleButton("Focos a uma Distancia X");
+		focosADistancia.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				trataClique(panelFocosADistancia, Estado.FOCOS_DISTANCIA, focosADistancia.isDown());
+				if(focosADistancia.isDown()) {
+					panelFocosADistancia.assinaTratador();
+				} else {
+					panelFocosADistancia.removeTratador();
+				}
+			}
+		});
+		focosADistancia.addMouseDownHandler(new MouseDownHandler() {
+			
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				if (!focosADistancia.isDown()) untoggleButtons();
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
+			}
+		});
 
 		distanciaFocos = new ToggleButton("Distância entre Focos");
 		distanciaFocos.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
@@ -158,6 +194,29 @@ public class PanelAcoes extends Composite {
 				EventBus.getInstance().publica(new AtualizarMapaEvento());
 			}
 		});
+		
+		areaDoAgente = new ToggleButton("Área do Agente");
+		areaDoAgente.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				panelAreaAgente.limpaCampos();
+				trataClique(panelAreaAgente, Estado.AREA_AGENTE, areaDoAgente.isDown());
+			}
+		});
+		areaDoAgente.addMouseDownHandler(new MouseDownHandler() {
+			
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				if (!areaDoAgente.isDown()) untoggleButtons();
+			}
+		});
+		
+		rotaDeAgente = new ToggleButton("Rota de Agente");
+		rotaDeAgente. setEnabled(false);
+		
+		simularDemissao = new ToggleButton("Simular Demissao");
+		simularDemissao.setEnabled(false);
 	}
 	
 	public void untoggleButtons() {
@@ -166,6 +225,10 @@ public class PanelAcoes extends Composite {
 		cadastrarFoco.setValue(false, true);
 		pessoasRaio.setValue(false, true);
 		distanciaFocos.setValue(false, true);
+		areaDoAgente.setValue(false, true);
+		rotaDeAgente.setValue(false, true);
+		simularDemissao.setValue(false, true);
+		focosADistancia.setValue(false, true);
 	}
 	
 	private void trataClique(Widget w, Estado estado, boolean valor) {
@@ -188,6 +251,10 @@ public class PanelAcoes extends Composite {
 	
 	public PanelDistanciaFocos getPanelDistancia() {
 		return panelDistanciaFocos;
+	}
+
+	public PanelAreaAgente getPanelAreaAgente() {
+		return panelAreaAgente;
 	}
 	
 }

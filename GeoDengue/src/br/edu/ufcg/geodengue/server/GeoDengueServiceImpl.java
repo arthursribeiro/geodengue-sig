@@ -1,9 +1,11 @@
 package br.edu.ufcg.geodengue.server;
 
+import java.util.List;
 import java.util.Map;
 
 import br.edu.ufcg.geodengue.client.service.GeoDengueService;
 import br.edu.ufcg.geodengue.server.persistence.PersistenceFacade;
+import br.edu.ufcg.geodengue.shared.AreaAgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
@@ -51,6 +53,11 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	}
 	
 	@Override
+	public PontoDTO recuperaAgente(double latitude, double longitude) {
+		return PersistenceFacade.getInstance().recuperaAgente(latitude, longitude);
+	}
+	
+	@Override
 	public Map<String, String> recuperaBairrosSemResponsaveis() {
 		return PersistenceFacade.getInstance().recuperaBairrosSemResponsaveis();
 	}
@@ -58,6 +65,16 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	@Override	
 	public double calculaDistanciaEntreFocos(PontoDTO p1, PontoDTO p2) {
 		return PersistenceFacade.getInstance().calculaDistanciaEntreFocos(p1, p2);
+	}
+
+	@Override
+	public AreaAgenteDTO recuperaDadosAreaAgente(double latitude, double longitude) {
+		return PersistenceFacade.getInstance().recuperaDadosAreaAgente(latitude, longitude);
+	}
+
+	@Override
+	public List<String> focosDistancia(double latitude, double longitude, double distancia) {
+		return PersistenceFacade.getInstance().recuperaFocosDistancia(latitude, longitude, distancia);
 	}
 
 }

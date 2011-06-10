@@ -166,13 +166,37 @@ public class PanelMapa extends Composite {
 		if (marcador == null && (panelPrincipal.botaoAtivo(Estado.CADASTRAR_FOCO)
 				|| panelPrincipal.botaoAtivo(Estado.CADASTRAR_PESSOA)
 				|| panelPrincipal.botaoAtivo(Estado.CADASTRAR_AGENTE)
+				|| panelPrincipal.botaoAtivo(Estado.FOCOS_DISTANCIA)
 				|| panelPrincipal.botaoAtivo(Estado.CALCULAR_PESSOA_RAIO))) {
 			cadastrarFocoOuPessoa(latLng);
 		} else if(panelPrincipal.botaoAtivo(Estado.DISTANCIA_DOIS_FOCOS)) {
 			trataDistanciaDoisFocos(latLng);
+		} else if (panelPrincipal.botaoAtivo(Estado.AREA_AGENTE)) {
+			trataGetDadosAgente(latLng);
 		} else {
 			adicionaToolTip(latLng);
 		}
+	}
+
+	private void trataGetDadosAgente(LatLng latLng) {
+		final AsyncCallback<PontoDTO> distanciaCallBack = new AsyncCallback<PontoDTO>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Ocorreu um erro na comunicacao com o Servidor! =X");
+			}
+
+			@Override
+			public void onSuccess(PontoDTO result) {
+				if(result != null) {
+					PanelAreaAgente panelAreaAgente = PanelPrincipal.getInstance().getPanelAreaAgente();
+					panelAreaAgente.povoa(result);
+				}
+			}
+
+		};
+
+		server.recuperaAgente(latLng.getLatitude(), latLng.getLongitude(), distanciaCallBack);
 	}
 
 	private void trataDistanciaDoisFocos(final LatLng latLongitude) {
@@ -216,7 +240,6 @@ public class PanelMapa extends Composite {
 				PanelPrincipal panelPrincipal = PanelPrincipal.getInstance();
 
 				String toolTipoText = "";
-
 
 				// TODO melhorar isso.. ta estranho o tooltip, sem contar o código repetido.
 				if (panelPrincipal.camadaAtiva(Camada.AREA_AGENTES) && !result.getBairros().isEmpty()) {

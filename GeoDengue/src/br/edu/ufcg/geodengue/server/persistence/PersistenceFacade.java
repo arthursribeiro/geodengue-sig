@@ -1,9 +1,11 @@
 package br.edu.ufcg.geodengue.server.persistence;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import br.edu.ufcg.geodengue.shared.AgenteDTO;
+import br.edu.ufcg.geodengue.shared.AreaAgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
@@ -68,12 +70,28 @@ public class PersistenceFacade {
 		return dao.recuperaPonto(latitude, longitude);
 	}
 	
+	public PontoDTO recuperaAgente(double latitude, double longitude) {
+		return dao.recuperaAgente(latitude, longitude);
+	}
+	
 	public Map<String, String> recuperaBairrosSemResponsaveis() {
 		return dao.recuperaBairrosSemResponsaveis();
 	}
 	
 	public double calculaDistanciaEntreFocos(PontoDTO p1, PontoDTO p2) {
 		return dao.calculaDistanciaEntreFocos(p1, p2);
+	}
+	
+	public AreaAgenteDTO recuperaDadosAreaAgente(double latitude, double longitude) {
+			
+		List<String> focosBairro = dao.getFocosEmBairro(latitude, longitude);
+		double area = dao.getAreaBairro(latitude, longitude);
+				
+		return new AreaAgenteDTO(focosBairro, area);
+	}
+	
+	public List<String> recuperaFocosDistancia(double latitude, double longitude, double distancia) {
+		return dao.recuperaFocosDistancia(latitude, longitude, distancia);
 	}
 	
 }
