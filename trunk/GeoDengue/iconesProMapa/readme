@@ -1,0 +1,10 @@
+copia os arquivos das imagens (doente.png e mosquito.png) para a seguinte pasta:
+
+pasta_do_geoserver/data_dir/styles/
+
+aí cria um novo estilo para focos (no Geoserver, Styles - Add a new style), copia o que 
+tá dentro de estilo focos e submit. faz o mesmo pra um novo estilo para pessoas. 
+
+depois vai em layers, clica na layer de focos. aí vai em Publishing, e lá você seleciona
+o novo estilo que você criou pra essa layer. aí pronto! faz o mesmo pra layer de
+pessoas. 
