@@ -22,7 +22,7 @@
               <ExternalGraphic>
                 <OnlineResource
                   xlink:type="simple"
-                  xlink:href="doente.png" />
+                  xlink:href="agente.png" />
                 <Format>image/png</Format>
               </ExternalGraphic>
               <Size>40</Size>
@@ -37,7 +37,7 @@
               <ExternalGraphic>
                 <OnlineResource
                   xlink:type="simple"
-                  xlink:href="doente.png" />
+                  xlink:href="agente.png" />
                 <Format>image/png</Format>
               </ExternalGraphic>
               <Size>30</Size>
@@ -51,7 +51,7 @@
               <ExternalGraphic>
                 <OnlineResource
                   xlink:type="simple"
-                  xlink:href="doente.png" />
+                  xlink:href="agente.png" />
                 <Format>image/png</Format>
               </ExternalGraphic>
               <Size>20</Size>
