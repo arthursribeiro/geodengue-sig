@@ -77,9 +77,6 @@ public class PanelPessoasRaio extends Composite {
 		panelPessoasRaio.add(vPanelFiltros);
 		
 		initWidget(panelPessoasRaio);
-		
-
-		
 	}
 	
 	private void calculaPessoasRaio() {
@@ -134,6 +131,11 @@ public class PanelPessoasRaio extends Composite {
 		public void trataEvento(MarcadorArrastadoEvento evento) {
 			calculaPessoasRaio();
 		}
+	}
+	
+	public void limpaCampos() {
+		raio.setValue("");
+		pessoasRaio.setValue("");
 	}
 	
 }

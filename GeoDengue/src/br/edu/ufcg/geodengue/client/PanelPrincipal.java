@@ -1,10 +1,14 @@
 package br.edu.ufcg.geodengue.client;
 
+import java.util.List;
+
 import br.edu.ufcg.geodengue.client.utils.Camada;
 import br.edu.ufcg.geodengue.client.utils.Estado;
 
+import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.maps.client.overlay.Polyline;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -91,6 +95,10 @@ public class PanelPrincipal extends Composite {
 		panelMapa.adicionaPoligono(poligono);
 	}
 	
+	public void adicionaPolyline(Polyline novaRota, List<Marker> lista) {
+		panelMapa.adicionaPolyline(novaRota, lista);
+	}
+	
 	public void adicionaCamada(Camada camada) {
 		panelCamadas.adicionaCamada(camada);
 	}
@@ -103,12 +111,28 @@ public class PanelPrincipal extends Composite {
 		panelMapa.removePoligonoPessoasRaio();
 	}
 	
+	public void removePolyline() {
+		panelMapa.removePolyline();
+	}
+	
 	public PanelDistanciaFocos getPanelDistancia() {
 		return panelAcoes.getPanelDistancia();
 	}
 	
 	public PanelAreaAgente getPanelAreaAgente() {
 		return panelAcoes.getPanelAreaAgente();
+	}
+	
+	public PanelRotaAgente getPanelRotaAgente() {
+		return panelAcoes.getPanelRotaAgente();
+	}
+	
+	public PanelSimulaDemitir getPanelSimulaDemitir() {
+		return panelAcoes.getPanelSimulaDemitir();
+	}
+	
+	public MapWidget getMapa() {
+		return panelMapa.getMapWidget();
 	}
 	
 }

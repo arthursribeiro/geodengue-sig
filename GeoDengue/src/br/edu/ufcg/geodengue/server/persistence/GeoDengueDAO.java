@@ -15,6 +15,7 @@ import org.postgis.PGgeometry;
 import br.edu.ufcg.geodengue.shared.AgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
+import br.edu.ufcg.geodengue.shared.SimularDTO;
 import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 public class GeoDengueDAO {
@@ -141,6 +142,7 @@ public class GeoDengueDAO {
 	public long pessoasRaio(RaioDTO raio) {
 		String pontoText = String.format("POINT(%f %f)", raio.getLongitude(), raio.getLatitude());
 		pontoText = pontoText.replace(",", ".");
+		
 		long pessoasContaminadas = -1; // Erro
 		try {
             PreparedStatement s = conn.prepareStatement(Consultas.PESSOAS_RAIO);      
@@ -315,6 +317,30 @@ public class GeoDengueDAO {
 		return dados;
 	}
 	
+	public List<String> getPontosEmBairro(double latitude, double longitude) {
+		String pontoText = String.format("POINT(%f %f)", longitude, latitude);
+		pontoText = pontoText.replace(",", ".");
+		
+		int id = getBairroID(pontoText);
+		if (id == -1) throw new IllegalArgumentException();
+		
+		List<String> dados = new ArrayList<String>();
+		try {
+            PreparedStatement s = conn.prepareStatement(Consultas.PONTOS_NA_AREA);      
+            s.setInt(1, id);
+
+            ResultSet rs = s.executeQuery();
+        	while(rs.next()){
+        		PGgeometry pg = (PGgeometry)(rs.getObject("geometria"));
+            	dados.add(pg.toString());
+            }
+            s.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return dados;
+	}
+	
 	public double getAreaBairro(double latitude, double longitude) {
 		String pontoText = String.format("POINT(%f %f)", longitude, latitude);
 		pontoText = pontoText.replace(",", ".");
@@ -359,6 +385,36 @@ public class GeoDengueDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+		return dados;
+	}
+	
+	public List<SimularDTO> simulaDemitir(double latitude, double longitude) {
+		String pontoText = String.format("POINT(%f %f)", longitude, latitude);
+		pontoText = pontoText.replace(",", ".");
+		
+		int id = getBairroID(pontoText);
+		if (id == -1) throw new IllegalArgumentException();
+		
+		List<SimularDTO> dados = new ArrayList<SimularDTO>();
+		try {
+            PreparedStatement s = conn.prepareStatement(Consultas.SIMULAR_DEMITIR);      
+            s.setInt(1, id);
+            s.setInt(2, id);
+            s.setInt(3, id);
+
+            ResultSet rs = s.executeQuery();
+        	while(rs.next()){
+        		int aid = (Integer)(rs.getObject("id"));
+        		String nome = (String)(rs.getObject("nome"));
+        		String desc = (String)(rs.getObject("desc"));
+        		
+            	dados.add(new SimularDTO(aid, nome, desc));
+            }
+            s.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
 		return dados;
 	}
 	

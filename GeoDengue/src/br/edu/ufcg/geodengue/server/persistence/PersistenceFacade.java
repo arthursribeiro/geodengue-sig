@@ -9,6 +9,7 @@ import br.edu.ufcg.geodengue.shared.AreaAgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
+import br.edu.ufcg.geodengue.shared.SimularDTO;
 import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 public class PersistenceFacade {
@@ -90,8 +91,16 @@ public class PersistenceFacade {
 		return new AreaAgenteDTO(focosBairro, area);
 	}
 	
+	public List<String> getPontosEmBairros(double latitude, double longitude) {
+		return dao.getPontosEmBairro(latitude, longitude);
+	}
+	
 	public List<String> recuperaFocosDistancia(double latitude, double longitude, double distancia) {
 		return dao.recuperaFocosDistancia(latitude, longitude, distancia);
+	}
+	
+	public List<SimularDTO> simulaDemitir(double latitude, double longitude) {
+		return dao.simulaDemitir(latitude, longitude);
 	}
 	
 }

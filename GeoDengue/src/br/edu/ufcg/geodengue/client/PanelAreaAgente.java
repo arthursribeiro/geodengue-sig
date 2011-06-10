@@ -37,18 +37,18 @@ public class PanelAreaAgente extends Composite implements PanelToggle {
 		vPanelFiltros.setSpacing(5);
 		
 		HorizontalPanel hPanelDesc = new HorizontalPanel();
-		Label lblDesc = new Label("Quantidade de Focos: ");
+		HTML lblDesc = new HTML("<b>Quantidade de Focos:</b> ");
 		hPanelDesc.add(lblDesc);
 		hPanelDesc.add(quantidade);
 		
 		HorizontalPanel hPanelDesc2 = new HorizontalPanel();
-		Label lblDesc2 = new Label("Área Responsavel: ");
+		HTML lblDesc2 = new HTML("<b>Área Responsavel:</b> ");
 		hPanelDesc2.add(lblDesc2);
 		hPanelDesc2.add(area);
 		
 		vPanelFiltros.add(hPanelDesc);
 		vPanelFiltros.add(hPanelDesc2);
-		vPanelFiltros.add(new Label("Focos: "));
+		vPanelFiltros.add(new HTML("<b>Focos:</b> "));
 		vPanelFiltros.add(focos);
 		
 //		chamaServidorGetDados();

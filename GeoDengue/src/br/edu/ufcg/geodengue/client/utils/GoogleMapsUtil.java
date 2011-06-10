@@ -11,7 +11,7 @@ public class GoogleMapsUtil {
 		LatLng[] circlePoints = new LatLng[nbOfPoints+1];
 
 		double EARTH_RADIUS = 6371000;
-		double d = (radius*100000) / EARTH_RADIUS;
+		double d = (radius) / EARTH_RADIUS;
 		double lat1 = Math.toRadians(center.getLatitude());
 		double lng1 = Math.toRadians(center.getLongitude());
 
@@ -33,5 +33,18 @@ public class GoogleMapsUtil {
 
 		return circlePoints;
 	}
+	
+    public static LatLng stringToLatLng(String poligono) {
+        poligono = poligono.replace("SRID=4326;POINT", "");
+        poligono = poligono.replace(")", "");
+        poligono = poligono.replace("(", "");
+
+        String[] pontos = poligono.split(" ");
+        
+        double lat = Double.parseDouble(pontos[1]);
+        double lon = Double.parseDouble(pontos[0]);
+        
+        return LatLng.newInstance(lat, lon);
+    }
 	
 }

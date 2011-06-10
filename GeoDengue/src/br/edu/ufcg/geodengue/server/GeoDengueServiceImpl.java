@@ -9,6 +9,7 @@ import br.edu.ufcg.geodengue.shared.AreaAgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
+import br.edu.ufcg.geodengue.shared.SimularDTO;
 import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -75,6 +76,16 @@ public class GeoDengueServiceImpl extends RemoteServiceServlet implements GeoDen
 	@Override
 	public List<String> focosDistancia(double latitude, double longitude, double distancia) {
 		return PersistenceFacade.getInstance().recuperaFocosDistancia(latitude, longitude, distancia);
+	}
+
+	@Override
+	public List<String> getPontosEmBairro(double latitude, double longitude) {
+		return PersistenceFacade.getInstance().getPontosEmBairros(latitude, longitude);
+	}
+
+	@Override
+	public List<SimularDTO> simulaDemitir(double latitude, double longitude) {
+		return PersistenceFacade.getInstance().simulaDemitir(latitude, longitude);
 	}
 
 }

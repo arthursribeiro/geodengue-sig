@@ -7,6 +7,7 @@ import br.edu.ufcg.geodengue.shared.AreaAgenteDTO;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
 import br.edu.ufcg.geodengue.shared.RaioDTO;
 import br.edu.ufcg.geodengue.shared.SessaoDTO;
+import br.edu.ufcg.geodengue.shared.SimularDTO;
 import br.edu.ufcg.geodengue.shared.TooltipDTO;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -36,4 +37,8 @@ public interface GeoDengueService extends RemoteService {
 	public AreaAgenteDTO recuperaDadosAreaAgente(double latitude, double longitude);
 	
 	public List<String> focosDistancia(double latitude, double longitude, double distancia);
+	
+	public List<String> getPontosEmBairro(double latitude, double longitude);
+	
+	public List<SimularDTO> simulaDemitir(double latitude, double longitude);
 }

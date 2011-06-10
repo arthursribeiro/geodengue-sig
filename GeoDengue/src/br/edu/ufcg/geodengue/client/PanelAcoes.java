@@ -39,6 +39,8 @@ public class PanelAcoes extends Composite {
 	private PanelFocosDistancia panelFocosADistancia;
 	private PanelDistanciaFocos panelDistanciaFocos;
 	private PanelAreaAgente panelAreaAgente;
+	private PanelRotaAgente panelRotaAgente;
+	private PanelSimulaDemitir panelSimulaDemitir;
 	
 	private List<Estado> estados;
 	
@@ -52,6 +54,8 @@ public class PanelAcoes extends Composite {
 		this.panelFocosADistancia = new PanelFocosDistancia("Texto de ajuda do Focos a uma distancia X");
 		this.panelDistanciaFocos = new PanelDistanciaFocos("Texto de ajuda do Calcular Pessoas em um Raio");
 		this.panelAreaAgente = new PanelAreaAgente();
+		this.panelRotaAgente = new PanelRotaAgente();
+		this.panelSimulaDemitir = new PanelSimulaDemitir();
 		
 		this.panelPessoasRaio.iniciaTratador();
 		this.panelFocosADistancia.iniciaTratador();
@@ -136,6 +140,7 @@ public class PanelAcoes extends Composite {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				panelPessoasRaio.limpaCampos();
 				trataClique(panelPessoasRaio, Estado.CALCULAR_PESSOA_RAIO, pessoasRaio.isDown());
 				if(pessoasRaio.isDown()) {
 					panelPessoasRaio.assinaTratador();
@@ -213,10 +218,51 @@ public class PanelAcoes extends Composite {
 		});
 		
 		rotaDeAgente = new ToggleButton("Rota de Agente");
-		rotaDeAgente. setEnabled(false);
+		rotaDeAgente.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				panelRotaAgente.limpaCampos();
+				trataClique(panelRotaAgente, Estado.ROTA, rotaDeAgente.isDown());
+				if(rotaDeAgente.isDown()) {
+					PanelPrincipal.getInstance().adicionaCamada(Camada.ROTA);
+				} else {
+					PanelPrincipal.getInstance().removeCamada(Camada.ROTA);
+					PanelPrincipal.getInstance().removePolyline();
+				}
+			}
+		});
+		rotaDeAgente.addMouseDownHandler(new MouseDownHandler() {
+			
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				if (!rotaDeAgente.isDown()) untoggleButtons();
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
+			}
+		});
 		
 		simularDemissao = new ToggleButton("Simular Demissao");
-		simularDemissao.setEnabled(false);
+		simularDemissao.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				panelSimulaDemitir.limpaCampos();
+				trataClique(panelSimulaDemitir, Estado.SIMULA_DEMITIR , simularDemissao.isDown());
+//				if(simularDemissao.isDown()) {
+//					PanelPrincipal.getInstance().adicionaCamada(Camada.SIMULA_DEMITIR);
+//				} else {
+//					PanelPrincipal.getInstance().removeCamada(Camada.SIMULA_DEMITIR);
+//				}
+			}
+		});
+		simularDemissao.addMouseDownHandler(new MouseDownHandler() {
+			
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				if (!simularDemissao.isDown()) untoggleButtons();
+				EventBus.getInstance().publica(new AtualizarMapaEvento());
+			}
+		});
 	}
 	
 	public void untoggleButtons() {
@@ -255,6 +301,14 @@ public class PanelAcoes extends Composite {
 
 	public PanelAreaAgente getPanelAreaAgente() {
 		return panelAreaAgente;
+	}
+
+	public PanelRotaAgente getPanelRotaAgente() {
+		return panelRotaAgente;
+	}
+	
+	public PanelSimulaDemitir getPanelSimulaDemitir() {
+		return panelSimulaDemitir;
 	}
 	
 }

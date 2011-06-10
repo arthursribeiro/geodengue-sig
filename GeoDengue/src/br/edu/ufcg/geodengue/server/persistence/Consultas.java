@@ -17,7 +17,7 @@ public class Consultas {
 	public static final String PESSOAS_RAIO = "SELECT COUNT(*) AS valor " +
 												"FROM ponto p " +
 												"WHERE p.tipo = 'P' " +
-												"AND Contains(Buffer(GeometryFromText(?, 4326), ?), p.geom)"; 
+												"AND Contains(Transform(Buffer(Transform(GeometryFromText(?, 4326),2163) , ?), 4326), p.geom)"; 
 	
 	public static final String DADOS_FOCO = "SELECT p.descricao AS desc, p.id AS id " +
 											"FROM Ponto p " +
@@ -70,6 +70,13 @@ public class Consultas {
 												"b.gid = a.bairroresp AND " +
 												"Within(Transform(GeometryFromText(p.geom, 4326),29195), b.the_geom)";
 	
+	public static final String PONTOS_NA_AREA = "SELECT p.geom AS geometria " +
+												"FROM Ponto p, Agente a, bairroscampina b " +
+												"WHERE a.bairroresp = ? AND " +
+												"p.tipo IN ('F', 'P') AND " +
+												"b.gid = a.bairroresp AND " +
+												"Within(Transform(GeometryFromText(p.geom, 4326),29195), b.the_geom)";
+	
 	public static final String FOCOS_DISTANCIA = "SELECT p1.descricao AS desc " +
 													"FROM Ponto p1, Ponto p2 " +
 													"WHERE p1.tipo = 'F' AND " +
@@ -77,5 +84,14 @@ public class Consultas {
 													"distance_sphere(p1.geom, Buffer(GeometryFromText(?, 4326), 0.001)) = ?";
 	
 	public static final String AREA_BAIRRO = "SELECT ST_Area(b.the_geom)/1000000 FROM bairroscampina b WHERE b.gid = ?";
+	
+	public static final String SIMULAR_DEMITIR = "SELECT a1.id AS id, a1.nome AS nome, p1.descricao AS desc " +
+												"FROM agente a1, Ponto p1, bairroscampina b, bairroscampina b1 " +
+												"WHERE a1.bairroresp <> ? " +
+												"AND p1.tipo = 'F' " +
+												"AND b.gid = ? " +
+												"AND b1.gid = a1.bairroresp " +
+												"AND ST_Within(Transform(GeometryFromText(p1.geom, 4326),29195), b.the_geom) " +
+												"AND ST_Distance(b1.the_geom, (Transform(GeometryFromText(p1.geom, 4326),29195))) < ALL ( SELECT Distance(Transform(GeometryFromText(p1.geom, 4326),29195), b3.the_geom) FROM agente a2, bairroscampina b3 WHERE a1.bairroresp <> a2.bairroresp AND a2.bairroresp <> ? AND b3.gid = a2.bairroresp AND Within(Transform(GeometryFromText(p1.geom, 4326),29195), b.the_geom));";
 	
 }
