@@ -22,8 +22,8 @@ public class GeoDengueDAO {
 
 	private final String url = "jdbc:postgresql:mydb";
 	private final String driver = "org.postgresql.Driver";
-	private final String usuario = "raquel";
-	private final String senha = "senha";
+	private final String usuario = "postgres";
+	private final String senha = "raissa";
 	
 	private Connection conn;
 	
