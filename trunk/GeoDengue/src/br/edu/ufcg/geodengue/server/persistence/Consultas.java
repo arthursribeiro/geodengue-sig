@@ -23,6 +23,11 @@ public class Consultas {
 											"FROM Ponto p " +
 											"WHERE p.tipo = 'F' " +
 											"AND Contains(Buffer(GeometryFromText(?, 4326), 0.001), p.geom)";
+	
+	public static final String DADOS_AGENTE = "SELECT p.descricao AS desc, p.id AS id " +
+												"FROM Ponto p " +
+												"WHERE p.tipo = 'A' " +
+												"AND Contains(Buffer(GeometryFromText(?, 4326), 0.001), p.geom)";
 
 	public static final String DADOS_PESSOA = "SELECT p.descricao AS desc " +
 												"FROM Ponto p " +
@@ -57,4 +62,20 @@ public class Consultas {
 	
 	
 	public static final String TEM_AGENTE_BAIRRO = "SELECT count(a.nome) AS qnt FROM Agente a WHERE a.bairroResp = ?";
+	
+	public static final String FOCOS_NA_AREA = "SELECT p.descricao AS desc " +
+												"FROM Ponto p, Agente a, bairroscampina b " +
+												"WHERE a.bairroresp = ? AND " +
+												"p.tipo = 'F' AND " +
+												"b.gid = a.bairroresp AND " +
+												"Within(Transform(GeometryFromText(p.geom, 4326),29195), b.the_geom)";
+	
+	public static final String FOCOS_DISTANCIA = "SELECT p1.descricao AS desc " +
+													"FROM Ponto p1, Ponto p2 " +
+													"WHERE p1.tipo = 'F' AND " +
+													"p1.id <> p2.id AND " +
+													"distance_sphere(p1.geom, Buffer(GeometryFromText(?, 4326), 0.001)) = ?";
+	
+	public static final String AREA_BAIRRO = "SELECT ST_Area(b.the_geom)/1000000 FROM bairroscampina b WHERE b.gid = ?";
+	
 }

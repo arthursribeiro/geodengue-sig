@@ -1,7 +1,5 @@
 package br.edu.ufcg.geodengue.client;
 
-import java.util.Map;
-
 import br.edu.ufcg.geodengue.client.service.GeoDengueService;
 import br.edu.ufcg.geodengue.client.service.GeoDengueServiceAsync;
 import br.edu.ufcg.geodengue.shared.PontoDTO;
@@ -17,7 +15,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -53,9 +50,10 @@ public class PanelCadastraAgente extends Composite implements PanelToggle {
 				chamaServidorCadastrarAgente();
 			}
 		});
+		
+		hPanelDesc.add(botaoCadastrar);
 
 		vPanelFiltros.add(hPanelDesc);
-		vPanelFiltros.add(botaoCadastrar);
 		
 		panelCadastra = new DecoratorPanel();
 		panelCadastra.add(vPanelFiltros);

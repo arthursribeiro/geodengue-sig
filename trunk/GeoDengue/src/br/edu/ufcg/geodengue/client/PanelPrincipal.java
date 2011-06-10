@@ -8,6 +8,7 @@ import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PanelPrincipal extends Composite {
 
@@ -29,13 +30,20 @@ public class PanelPrincipal extends Composite {
 		panelMapaECamadas.setSpacing(10);
 		
 		panelCamadas = new PanelCamadas();
-		panelMapaECamadas.add(panelCamadas);
+//		panelMapaECamadas.add(panelCamadas);
+
+		VerticalPanel panelCamadasEAcoes = new VerticalPanel();
+		panelCamadasEAcoes.setSpacing(5);
+
+		panelCamadasEAcoes.add(panelCamadas);
+		panelCamadasEAcoes.add(panelAcoes);
 
 		panelMapa = new PanelMapa();
+		panelMapaECamadas.add(panelCamadasEAcoes);
 		panelMapaECamadas.add(panelMapa);
 
 //		RootPanel.get("dados").add(panelDados);
-		RootPanel.get("acoes").add(panelAcoes);
+//		RootPanel.get("acoes").add(panelAcoes);
 		RootPanel.get("container").add(panelMapaECamadas);
 	}
 
@@ -97,6 +105,10 @@ public class PanelPrincipal extends Composite {
 	
 	public PanelDistanciaFocos getPanelDistancia() {
 		return panelAcoes.getPanelDistancia();
+	}
+	
+	public PanelAreaAgente getPanelAreaAgente() {
+		return panelAcoes.getPanelAreaAgente();
 	}
 	
 }

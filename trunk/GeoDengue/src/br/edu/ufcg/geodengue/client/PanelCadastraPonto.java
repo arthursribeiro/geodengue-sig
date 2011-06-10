@@ -52,8 +52,9 @@ public class PanelCadastraPonto extends Composite implements PanelToggle {
 			}
 		});
 
+		hPanelDesc.add(botaoCadastrar);
+		
 		vPanelFiltros.add(hPanelDesc);
-		vPanelFiltros.add(botaoCadastrar);
 		
 		panelCadastra = new DecoratorPanel();
 		panelCadastra.add(vPanelFiltros);
