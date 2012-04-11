@@ -18,3 +18,4 @@ CREATE TABLE Ponto (
 	tipo char
 );
 SELECT AddGeometryColumn('ponto','geom',4326,'POINT',2);
+abb
